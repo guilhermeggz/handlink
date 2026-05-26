@@ -26,10 +26,12 @@ dependencies = [
     "email-validator",
     "flask-sqlalchemy",
     "sqlalchemy",
+    "flask-login",
+    "validate-docbr",
 ]
 
 
-[tool.delivery]
+[tool.handlink]
 display_name = "HandLink"
 company = "Wigy Tech"
 

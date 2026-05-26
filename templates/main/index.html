@@ -1,11 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Este é o index</h1>
-</body>
-</html>
+{% extends "main/base.html" %}
+{% block content %}
+    <section class="section">
+        <div class="container">
+            <h1 class="title is-3">
+                Bem-vindo ao HandLink!
+            </h1>
+
+            <p>
+                Encontre o serviço ideal para a sua casa
+            </p>
+
+            <input type="text" class="input" placeholder="O que você precisa?">
+
+            <button class="button is-link mt-2">Buscar</button>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="title is-4">
+                Escolha a categoria de serviço que você precisa
+            </h2>
+            <div class="navbar">
+                <a class="navbar-item" href="/servicos/pedreiro">
+                    Pedreiro
+                </a>
+
+                <a class="navbar-item" href="/servicos/eletricista">
+                    Eletricista
+                </a>
+
+                <a class="navbar-item" href="/servicos/encanador">
+                    Encanador
+                </a>
+
+                <a class="navbar-item" href="/servicos/limpeza">
+                    Limpeza
+                </a>
+
+                <a class="navbar-item" href="/servicos/jardinagem">
+                    Jardinagem
+                </a>
+
+                <a class="navbar-item" href="/servicos/gerais">
+                    Serviços gerais
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="title is-4">
+                Serviços em destaque
+            </h2>
+            
+            <div class="horizontal-scroll">
+                <div class="card mr-4" style="width: 18rem;">
+                    <div class="card-content">
+                        <p class="title is-5">João Silva</p>
+                        <p class="subtitle is-6">Pedreiro</p>
+                        <p>Especialista em reformas residenciais, com mais de 10 anos de experiência.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="title is-4">
+                O que é o HandLink?
+            </h2>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum odit expedita repellat animi neque aspernatur odio ex a magni consectetur, ipsa exercitationem, sit repellendus ipsum nisi perspiciatis nulla, facere porro!
+            </p>
+        </div>
+    </section>
+
+{% endblock %}

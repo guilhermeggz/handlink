@@ -1,0 +1,84 @@
+{% extends "auth/base.html" %}
+{% block content %}
+<div class="container">
+    <div class="columns is-centered">
+        <div class="column is 8-tablet is-6-desktop">
+            <h1 class="title is-2">Crie sua conta</h1>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="notification is-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('auth.signup') }}">
+                {{ form.hidden_tag() }}
+
+                <div class="field">
+                    {{ form.name.label(class="label") }}
+                    <div class="control">
+                        {{ form.name(class="input") }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    {{ form.email.label(class="label") }}
+                    <div class="control">
+                        {{ form.email(class="input is-danger" if form.email.errors else "input") }}
+                    </div>
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <p class="help is-danger">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="field">
+                    {{ form.password.label(class="label") }}
+                    <div class="control">
+                        {{ form.password(class="input") }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    {{ form.confirm_password.label(class="label") }}
+                    <div class="control">
+                        {{ form.confirm_password(class="input is-danger" if form.confirm_password.errors else "input") }}
+                    </div>
+                    {% if form.confirm_password.errors %}
+                        {% for error in form.confirm_password.errors %}
+                            <p class="help is-danger">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="field">
+                    {{ form.cpf.label(class="label") }}
+                    <div class="control">
+                        {{ form.cpf(class="input is-danger" if form.cpf.errors else "input") }}
+                    </div>
+                    {% if form.cpf.errors %}
+                        {% for error in form.cpf.errors %}
+                            <p class="help is-danger">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="field is-grouped">
+                    <div class="control">
+                        {{ form.submit(class="button is-link") }}
+                    </div>
+                    <div class="control">
+                        <a href="{{ url_for('main.index') }}" class="button is-light">Cancelar</a>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

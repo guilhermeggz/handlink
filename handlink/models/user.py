@@ -3,6 +3,8 @@ from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import func, Integer, String, DateTime, Boolean
 from handlink.ext.db import db
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 if TYPE_CHECKING:
     from .role_user import RoleUser
@@ -10,7 +12,7 @@ if TYPE_CHECKING:
     from .service import Service
     from .appointment import Appointment
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
     __table_args__ = {'extend_existing': True}
 
@@ -66,6 +68,12 @@ class User(db.Model):
     @property
     def roles(self):
         return [assoc.role for assoc in self.role_associations if assoc.role]
+
+    def set_password(self, password: str):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password: str) -> bool:
+        return check_password_hash(self.password, password)
 
     def __repr__(self) -> str:
         return f"<User {self.email}>"

@@ -1,42 +1,21 @@
-from flask import Blueprint, render_template, current_app, flash, redirect, url_for, abort, jsonify, request
+from flask import (
+    Blueprint, render_template, current_app,
+    flash, redirect, url_for,
+    abort, jsonify, request,
+)
 from handlink.models import Service, User, RoleUser, Role
 from handlink.ext.db import db
-
-#from handlink.forms.main import Formulario
+from handlink.forms.main import SignUpForm, LoginForm
 
 bp_main = Blueprint("main", __name__)
 
+@bp_main.route('/')
 def index():
     current_app.logger.debug('renderizando index html dinamicamente')
 
     return render_template(
         'main/index.html'
     )
-
-@bp_main.route('/api/cadastro/<string:nome>/<string:r_email>/<string:senha>/<string:r_cpf>')
-def cadastro(nome, r_email, senha, r_cpf):
-    if r_email:
-        user = User.query.filter_by(email=r_email).first()
-        if user:
-            return jsonify({
-                "ERRO": "Email ja cadastrado"
-            }), 422
-    if r_cpf:
-        user = User.query.filter_by(cpf=r_cpf).first()
-        if user:
-            return jsonify({
-                "ERRO": "CPF ja cadastrado"
-            }), 422
-    
-    new_user = User(name=nome, email=r_email, password=senha, cpf=r_cpf)
-    db.session.add(new_user)
-    db.session.commit()
-
-    return jsonify({
-        "Mensagem": f"Usuário cadastrado com sucesso!",
-        "Nome": nome,
-        "E-mail": r_email
-    }), 201
 
 @bp_main.route('/api/servicos/buscar', methods=['GET'])
 def buscar_servicos():

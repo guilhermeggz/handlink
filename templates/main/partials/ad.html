@@ -1,0 +1,46 @@
+<div class="promo" style="
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    color: white;
+    padding: 20px 30px;
+    margin: 20px auto;
+    max-width: 900px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+    text-align: center;
+    font-size: 1.6em;
+    font-weight: bold;
+    border: 3px solid #fff;
+    position: relative;
+    overflow: hidden;
+    ">
+
+<!-- Efeito de brilho sutil (opcional, mas da um toque premium) -->
+<div style="
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    animation: shine 6s infinite linear;
+    pointer-events: none;
+    "></div>
+
+
+<strong style="letter-spacing: 1px;">
+    Promocao do Dia:
+</strong>
+{{ promocao | upper }} <!-- ou sem filtro, dependendo do conteudo -->
+<!-- Icone ou destaque extra (opcional) -->
+
+<span style="font-size: 2em; margin-left: 15px;"></span>
+</div>
+
+<!-- Animacao simples de brilho (adicione no <head> ou em CSS global se preferir)-->
+<style>
+    @keyframes shine {
+    0% { transform: translateX(-100%) translateY(-100%); }
+    50% { transform: translateX(100%) translateY(100%); }
+    100% { transform: translateX(-100%) translateY(-100%); }
+    }
+</style>

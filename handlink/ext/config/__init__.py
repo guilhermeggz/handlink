@@ -1,9 +1,8 @@
 import os
-from dotenv import load_dotenv
+from tasks import load_env
 
 def init_app(app):
-    # Carrega variaveis do ambiente (ja selecionado via tasks.py)
-    load_dotenv(override=True)
+    load_env("dev")  # Carrega o ambiente de desenvolvimento por padrão
 
     app.json.ensure_ascii = False       # CORRECAO ACENTOS
 
@@ -11,7 +10,10 @@ def init_app(app):
     app.config['DEBUG'] = os.environ.get('FLASK_DEBUG') == '1'
 
     app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER')
-    app.config['MAIL_PORT'] = os.environ.get('MAIL_PORT')
+
+    mail_port = os.environ.get('MAIL_PORT')
+    app.config['MAIL_PORT'] = int(mail_port) if mail_port else 587
+
     app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS') == 'True'
     app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
     app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')

@@ -24,11 +24,29 @@ def create_app(test_config=None):
     from handlink.ext.db import register_models
     register_models()
 
+    from handlink.ext.db import db
+    with app.app_context():
+        db.create_all()
+
     # ----------------------------------------------------------
     # Blueprints (camada de apresentacao)
     # ----------------------------------------------------------
 
     from handlink.views import init_app as init_site
     init_site(app)
+
+    # ----------------------------------------------------------
+    # Flask-WTF (formularios)
+    # ----------------------------------------------------------
+
+    from handlink.ext.wtf import init_app as init_wtf
+    init_wtf(app)
+
+    # ----------------------------------------------------------
+    # Flask-Login (autenticacao)
+    # ----------------------------------------------------------
+
+    from handlink.ext.auth import init_app as init_login
+    init_login(app) 
 
     return app

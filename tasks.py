@@ -16,13 +16,11 @@ def load_env(env: str):
     env_file = f".env.{env}"
 
     if not os.path.exists(env_file):
-        raise FileNotFoundError(f"Erro Critico: O arquivo de ambiente '{env_file}' nao foi encontrado.")
+        raise FileNotFoundError(f"Erro Crítico: O arquivo de ambiente '{env_file}' não foi encontrado.")
 
-    if os.path.exists(env_file):
-        load_dotenv(env_file, override=True)
-        print(f"[ENV] Ambiente '{env.upper()}' carregado com sucesso a partir de: {env_file}")
-    else:
-        raise FileNotFoundError(f"{env_file} nao encontrado")
+    # Usamos o load_dotenv apenas para validar e ler dentro do script se necessário
+    load_dotenv(env_file, override=True)
+    print(f"[ENV] Ambiente '{env.upper()}' carregado com sucesso a partir de: {env_file}")
 
 
 # ==========================================================
@@ -44,20 +42,47 @@ def uninstall(c):
     """
     Remove o pacote instalado.
     """
-    c.run("pip uninstall -y delivery", echo=True)
+    c.run("pip uninstall -y handlink", echo=True)
 
 
 # ==========================================================
 # EXECUCAO
 # ==========================================================
-@task
-def run(c):
+@task(help={"seed": "Executa o script de população do banco antes de iniciar (padrão: False)"})
+def run(c, seed=False):
     """
-    Executa a aplicacao Flask em ambiente de desenvolvimento.
+    Executa a aplicação Flask forçando as variáveis no terminal.
+    Uso: invoke run
     """
     load_env("dev")
-    c.run("flask run")
-    c.run("py seed.py")
+    
+    if seed:
+        print("[SEED] Populando o banco de dados...")
+        c.run("python seed.py", echo=True)
+        
+    print("[RUN] Iniciando o servidor de desenvolvimento...")
+    
+    # ESTRATÉGIA COMPATÍVEL COM WINDOWS/LINUX:
+    # Em vez de confiar no os.environ passar magicamente, nós pegamos os valores atuais
+    # que o load_dotenv acabou de ler e montamos um dicionário limpo.
+    
+    # Buscamos direto do que está na memória agora
+    flask_app = os.environ.get("FLASK_APP", "app.py") # mude para "handlink" se for o caso
+    flask_debug = os.environ.get("FLASK_DEBUG", "1")
+    secret_key = os.environ.get("SECRET_KEY", "")
+
+    # Criamos um ambiente customizado contendo TUDO do sistema + as variáveis atualizadas
+    custom_env = dict(os.environ)
+    custom_env["FLASK_APP"] = flask_app
+    custom_env["FLASK_DEBUG"] = flask_debug
+    custom_env["SECRET_KEY"] = secret_key
+
+    # Se mesmo assim o Invoke falhar no Windows, a alternativa abaixo junta os comandos na mesma linha do terminal:
+    # No Windows (CMD), para rodar variáveis na mesma linha usamos: set FLASK_DEBUG=1 && set SECRET_KEY=xxx && flask run
+    # No Linux/Mac usamos: FLASK_DEBUG=1 SECRET_KEY=xxx flask run
+    
+    # Vamos usar o parâmetro env do Invoke, mas garantindo que passamos o dicionário completo populado:
+    c.run("flask run", env=custom_env, echo=True)
 
 
 @task
@@ -115,7 +140,7 @@ def seed_dev(c):
 @task
 def zip(c, name=None):
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
-    zip_filename = name or f"delivery-projeto-{timestamp}.zip"
+    zip_filename = name or f"handlink-projeto-{timestamp}.zip"
     zip_path = os.path.abspath(os.path.join("..", zip_filename))
 
     print(f"→ Criando ZIP: {zip_path}")
@@ -125,7 +150,7 @@ def zip(c, name=None):
         "__pycache__",
         ".git",
         ".vscode",
-        "delivery.egg-info"
+        "handlink.egg-info"
     ]
 
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
