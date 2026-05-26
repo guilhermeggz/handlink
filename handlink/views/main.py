@@ -5,7 +5,6 @@ from flask import (
 )
 from handlink.models import Service, User, RoleUser, Role
 from handlink.ext.db import db
-from handlink.forms.main import SignUpForm, LoginForm
 
 bp_main = Blueprint("main", __name__)
 
