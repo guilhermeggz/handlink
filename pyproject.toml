@@ -38,6 +38,7 @@ company = "Wigy Tech"
 
 [project.optional-dependencies]
 dev = [
+    "invoke",
     "ipython",
     "flask-shell-ipython",
     "black",

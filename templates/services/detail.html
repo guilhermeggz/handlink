@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Detalhe do servico - HandyLink{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-7">
+                <h1 class="title is-3">{{ service.name }}</h1>
+                <p class="subtitle is-5">{{ service.category.name }}</p>
+                <p>{{ service.desc }}</p>
+
+                <div class="box mt-5">
+                    <p><strong>Preco:</strong> R$ {{ "%.2f"|format(service.price) }}</p>
+                    {% if service.city %}
+                        <p><strong>Cidade:</strong> {{ service.city.name }}{% if service.city.state %} - {{ service.city.state }}{% endif %}</p>
+                    {% endif %}
+                    <p><strong>Avaliacao:</strong> ***** ({{ service.appointments|length }} trabalhos)</p>
+                </div>
+
+                <h2 class="title is-5">Profissional</h2>
+                <div class="box">
+                    {% if service.provider.photo %}
+                        <figure class="image is-96x96 mb-3">
+                            <img src="{{ service.provider.photo }}" alt="Foto de {{ service.provider.name }}">
+                        </figure>
+                    {% endif %}
+                    <p><strong>Nome:</strong> {{ service.provider.name }}</p>
+                    <p><strong>E-mail:</strong> {{ service.provider.email }}</p>
+                    {% if service.provider.phone %}
+                        <p><strong>Telefone:</strong> {{ service.provider.phone }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="column is-5">
+                <div class="box">
+                    <h2 class="title is-5">Solicitar servico</h2>
+                    {% if current_user.is_authenticated %}
+                        <form method="POST" action="{{ url_for('services.detail', service_id=service.id) }}">
+                            {{ form.hidden_tag() }}
+                            <div class="field">
+                                {{ form.appointment_time.label(class="label") }}
+                                <div class="control">
+                                    {{ form.appointment_time(class="input is-danger" if form.appointment_time.errors else "input") }}
+                                </div>
+                                {% for error in form.appointment_time.errors %}
+                                    <p class="help is-danger">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                            {{ form.submit(class="button is-primary is-fullwidth") }}
+                        </form>
+                    {% else %}
+                        <p class="mb-4">Entre na sua conta para escolher a data e solicitar este servico.</p>
+                        <a class="button is-primary is-fullwidth" href="{{ url_for('auth.login', next=request.path) }}">Fazer login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

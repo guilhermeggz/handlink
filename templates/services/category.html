@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Servicos - HandyLink{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        {% if category %}
+            <h1 class="title is-3">{{ category.name }}</h1>
+            <p class="subtitle is-5">{{ category.desc }}</p>
+
+            {% if services %}
+                <div class="columns is-multiline">
+                    {% for service in services %}
+                        <div class="column is-6">
+                            <div class="card">
+                                <div class="card-content">
+                                    <p class="title is-5">{{ service.name }}</p>
+                                    <p class="subtitle is-6">{{ service.provider.name }}</p>
+                                    <p>{{ service.desc }}</p>
+                                    <p class="mt-3"><strong>Preco:</strong> R$ {{ "%.2f"|format(service.price) }}</p>
+                                    {% if service.city %}
+                                        <p><strong>Cidade:</strong> {{ service.city.name }}{% if service.city.state %} - {{ service.city.state }}{% endif %}</p>
+                                    {% endif %}
+                                    <p><strong>Avaliacao:</strong> ***** ({{ service.appointments|length }} trabalhos)</p>
+                                </div>
+                                <footer class="card-footer">
+                                    <a class="card-footer-item" href="{{ url_for('services.detail', service_id=service.id) }}">
+                                        Ver detalhes
+                                    </a>
+                                </footer>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="notification is-info">
+                    Ainda nao ha servicos ativos nesta categoria.
+                </div>
+            {% endif %}
+        {% else %}
+            <h1 class="title is-3">Categoria nao encontrada</h1>
+            <p>Nao encontramos uma categoria ativa para "{{ slug }}".</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

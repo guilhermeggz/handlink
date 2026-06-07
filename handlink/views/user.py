@@ -1,9 +1,11 @@
-from flask import (
-    Blueprint, render_template, current_app,
-    flash, redirect, url_for,
-    abort, jsonify, request,
-)
+from flask import Blueprint, render_template
+from flask_login import current_user, login_required
 
-#from handlink.models import Models
-#from handlink.ext.db import db
+
 bp_user = Blueprint("user", __name__)
+
+
+@bp_user.route("/perfil")
+@login_required
+def profile():
+    return render_template("profile/profile.html", user=current_user)

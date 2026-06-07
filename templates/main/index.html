@@ -1,82 +1,41 @@
-{% extends "main/base.html" %}
+{% extends "base.html" %}
+{% block title %}HandyLink{% endblock %}
+
 {% block content %}
-    <section class="section">
+<section class="hero is-primary is-small">
+    <div class="hero-body">
         <div class="container">
-            <h1 class="title is-3">
-                Bem-vindo ao HandLink!
-            </h1>
-
-            <p>
-                Encontre o serviço ideal para a sua casa
-            </p>
-
-            <input type="text" class="input" placeholder="O que você precisa?">
-
-            <button class="button is-link mt-2">Buscar</button>
+            <p class="title is-2">HandyLink</p>
+            <p class="subtitle is-4">Encontre profissionais para cuidar da sua casa.</p>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="section">
-        <div class="container">
-            <h2 class="title is-4">
-                Escolha a categoria de serviço que você precisa
-            </h2>
-            <div class="navbar">
-                <a class="navbar-item" href="/servicos/pedreiro">
-                    Pedreiro
-                </a>
-
-                <a class="navbar-item" href="/servicos/eletricista">
-                    Eletricista
-                </a>
-
-                <a class="navbar-item" href="/servicos/encanador">
-                    Encanador
-                </a>
-
-                <a class="navbar-item" href="/servicos/limpeza">
-                    Limpeza
-                </a>
-
-                <a class="navbar-item" href="/servicos/jardinagem">
-                    Jardinagem
-                </a>
-
-                <a class="navbar-item" href="/servicos/gerais">
-                    Serviços gerais
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="section">
-        <div class="container">
-            <h2 class="title is-4">
-                Serviços em destaque
-            </h2>
-            
-            <div class="horizontal-scroll">
-                <div class="card mr-4" style="width: 18rem;">
-                    <div class="card-content">
-                        <p class="title is-5">João Silva</p>
-                        <p class="subtitle is-6">Pedreiro</p>
-                        <p>Especialista em reformas residenciais, com mais de 10 anos de experiência.</p>
-                    </div>
+<section class="section">
+    <div class="container">
+        <h2 class="title is-4">Categorias de servico</h2>
+        <div class="columns is-multiline">
+            {% for category in categories %}
+                <div class="column is-6-tablet is-3-desktop">
+                    <a class="card" href="{{ url_for('services.category', slug=category.slug) }}">
+                        <div class="card-content">
+                            <p class="title is-5">{{ category.name }}</p>
+                            <p>{{ category.desc }}</p>
+                        </div>
+                    </a>
                 </div>
-
-            </div>
+            {% endfor %}
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="section">
-        <div class="container">
-            <h2 class="title is-4">
-                O que é o HandLink?
-            </h2>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum odit expedita repellat animi neque aspernatur odio ex a magni consectetur, ipsa exercitationem, sit repellendus ipsum nisi perspiciatis nulla, facere porro!
-            </p>
-        </div>
-    </section>
-
+<section class="section">
+    <div class="container">
+        <h2 class="title is-4">Como funciona</h2>
+        <p>
+            O HandyLink ajuda clientes a encontrar trabalhadores manuais por categoria,
+            comparar servicos disponiveis e solicitar um atendimento com data e hora.
+        </p>
+    </div>
+</section>
 {% endblock %}
