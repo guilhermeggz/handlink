@@ -4,6 +4,12 @@
     padding: 80px 0;
 }
 
+.services-hero {
+    background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+    color: #fff;
+    padding: 56px 0;
+}
+
 .category-card,
 .service-card {
     border: 0;
@@ -22,6 +28,13 @@
     color: #0d6efd;
     font-size: 2.5rem;
     margin-bottom: 15px;
+}
+
+.category-link {
+    color: inherit;
+    display: block;
+    height: 100%;
+    text-decoration: none;
 }
 
 .service-img {
@@ -72,6 +85,17 @@
     position: absolute;
     top: -50%;
     width: 200%;
+}
+
+.empty-state {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+    padding: 56px 24px;
+}
+
+.empty-state .fa-briefcase {
+    font-size: 2.75rem;
 }
 
 @keyframes shine {
