@@ -1,7 +1,9 @@
 from types import SimpleNamespace
 
-from flask import Blueprint, abort, jsonify, render_template, request
+from flask import Blueprint, abort, flash, jsonify, redirect, render_template, request, url_for
+from flask_login import login_required, current_user
 
+from handlink.forms.services import AnunciarServicoForm
 from handlink.models import Category, Service
 
 bp_services = Blueprint("services", __name__)
@@ -96,3 +98,17 @@ def buscar_servicos():
         "total_servicos": len(lista_resultado),
         "servicos": lista_resultado,
     }), 200
+
+
+@bp_services.route('/servicos/anunciar_servico', methods=['GET', 'POST'])
+def anunciar_servico():
+    if not current_user.is_authenticated:
+        flash('Faça login ou cadastre-se rapidinho para anunciar seu serviço.', 'info')
+        # Redireciona para o login e anexa a página atual no parâmetro 'next'
+        return redirect(url_for('auth.login', next=request.path))
+    
+    form = AnunciarServicoForm()
+
+    if form.validate_on_submit():
+        pass
+    return render_template('main/create_service.html', form=form)

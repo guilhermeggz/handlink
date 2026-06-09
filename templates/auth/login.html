@@ -4,7 +4,7 @@
 
 {% block nav_action %}
 <li class="nav-item ms-lg-3">
-    <a class="btn btn-primary" href="/signup">Cadastrar</a>
+    <a class="btn btn-primary" href="{{ url_for('auth.signup', next=request.args.get('next')) }}">Cadastrar</a>
 </li>
 {% endblock %}
 
@@ -50,7 +50,7 @@
 
                 <p class="text-center text-muted mt-4 mb-0">
                     Ainda não tem conta?
-                    <a href="/signup" class="fw-semibold text-decoration-none">Cadastre-se</a>
+                    <a href="{{ url_for('auth.signup', next=request.args.get('next')) }}" class="fw-semibold text-decoration-none">Cadastre-se</a>
                 </p>
             </div>
         </div>

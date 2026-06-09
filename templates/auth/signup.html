@@ -4,7 +4,7 @@
 
 {% block nav_action %}
 <li class="nav-item ms-lg-3">
-    <a class="btn btn-outline-primary" href="/login">Entrar</a>
+    <a class="btn btn-outline-primary" href="{{ url_for('auth.login', next=request.args.get('next')) }}">Entrar</a>
 </li>
 {% endblock %}
 
@@ -78,7 +78,7 @@
 
                 <p class="text-center text-muted mt-4 mb-0">
                     Já tem uma conta?
-                    <a href="/login" class="fw-semibold text-decoration-none">Entrar</a>
+                    <a href="{{ url_for('auth.login', next=request.args.get('next')) }}" class="fw-semibold text-decoration-none">Entrar</a>
                 </p>
             </div>
         </div>

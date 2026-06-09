@@ -38,8 +38,10 @@ def signup():
      
             login_user(new_user)
 
+            proxima_pagina = request.args.get('next')
+
             flash('Cadastro realizado com sucesso!', 'success')
-            return redirect(url_for('main.index'))
+            return redirect(proxima_pagina or url_for('main.index'))
         
         except Exception as e:
             db.session.rollback(),
@@ -59,8 +61,11 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
+
+            proxima_pagina = request.args.get('next')
+
             flash('Login realizado com sucesso!', 'success')
-            return redirect(url_for('main.index'))
+            return redirect(proxima_pagina or url_for('main.index'))
         else:
             flash('E-mail ou senha inválidos.', 'danger')
 
@@ -71,6 +76,7 @@ def login():
 
 @bp_auth.route('/logout')
 @login_required
+
 def logout():
     logout_user()
     flash('Você saiu da sua conta.', 'success')
