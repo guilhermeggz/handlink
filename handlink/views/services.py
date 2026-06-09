@@ -1,10 +1,11 @@
 from types import SimpleNamespace
 
 from flask import Blueprint, abort, flash, jsonify, redirect, render_template, request, url_for
-from flask_login import login_required, current_user
+from flask_login import current_user
 
+from handlink.ext.db import db
 from handlink.forms.services import AnunciarServicoForm
-from handlink.models import Category, Service
+from handlink.models import Category, City, Service
 
 bp_services = Blueprint("services", __name__)
 
@@ -18,17 +19,32 @@ FALLBACK_CATEGORIES = {
 }
 
 
+def set_service_form_choices(form):
+    categories = (
+        Category.query
+        .filter(Category.status == True)
+        .order_by(Category.name.asc())
+        .all()
+    )
+    cities = City.query.order_by(City.name.asc()).all()
+
+    form.category_id.choices = [(category.id, category.name) for category in categories]
+    form.city_id.choices = [
+        (city.id, f"{city.name} - {city.state}" if city.state else city.name)
+        for city in cities
+    ]
+
+
 @bp_services.route('/servicos/categoria/<int:category_id>')
 def services_by_category(category_id):
     category = Category.query.get(category_id)
 
     if not category and category_id in FALLBACK_CATEGORIES:
         category = SimpleNamespace(id=category_id, name=FALLBACK_CATEGORIES[category_id])
-        services = []
         return render_template(
             'main/services.html',
             category=category,
-            services=services,
+            services=[],
         )
 
     if not category:
@@ -104,11 +120,29 @@ def buscar_servicos():
 def anunciar_servico():
     if not current_user.is_authenticated:
         flash('Faça login ou cadastre-se rapidinho para anunciar seu serviço.', 'info')
-        # Redireciona para o login e anexa a página atual no parâmetro 'next'
         return redirect(url_for('auth.login', next=request.path))
-    
+
     form = AnunciarServicoForm()
+    set_service_form_choices(form)
+
+    if not form.category_id.choices or not form.city_id.choices:
+        flash('Cadastre ao menos uma categoria e uma cidade antes de anunciar um serviço.', 'warning')
 
     if form.validate_on_submit():
-        pass
+        service = Service(
+            provider_id=current_user.id,
+            category_id=form.category_id.data,
+            city_id=form.city_id.data,
+            name=form.name.data,
+            desc=form.description.data,
+            price=form.price_per_hour.data,
+            is_active=True,
+        )
+
+        db.session.add(service)
+        db.session.commit()
+
+        flash('Serviço anunciado com sucesso!', 'success')
+        return redirect(url_for('services.services_by_category', category_id=service.category_id))
+
     return render_template('main/create_service.html', form=form)
