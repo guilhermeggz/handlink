@@ -23,8 +23,9 @@
                     <p class="text-muted mb-0">Preencha seus dados para começar a usar o HandLink.</p>
                 </div>
 
-                <form method="POST" action="/signup" novalidate>
+                <form method="POST" action="" novalidate>
                     {{ form.hidden_tag() }}
+                    <input type="hidden" name="next" value="{{ request.args.get('next') or '' }}">
 
                     <div class="mb-3">
                         {{ form.name.label(class="form-label fw-semibold") }}

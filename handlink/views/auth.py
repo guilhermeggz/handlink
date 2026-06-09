@@ -38,10 +38,13 @@ def signup():
      
             login_user(new_user)
 
-            proxima_pagina = request.args.get('next')
+            proxima_pagina = request.form.get('next') or request.args.get('next')
 
             flash('Cadastro realizado com sucesso!', 'success')
-            return redirect(proxima_pagina or url_for('main.index'))
+            
+            if proxima_pagina:
+                return redirect(proxima_pagina)
+            return redirect(url_for('main.index'))
         
         except Exception as e:
             db.session.rollback(),
@@ -62,10 +65,15 @@ def login():
         if user and user.check_password(form.password.data):
             login_user(user)
 
-            proxima_pagina = request.args.get('next')
+            proxima_pagina = request.form.get('next') or request.args.get('next')
+
+            current_app.logger.debug(f"Usuário {user.email} logou com sucesso. Redirecionando para: {proxima_pagina}")
 
             flash('Login realizado com sucesso!', 'success')
-            return redirect(proxima_pagina or url_for('main.index'))
+
+            if proxima_pagina:
+                return redirect(proxima_pagina)
+            return redirect(url_for('main.index'))
         else:
             flash('E-mail ou senha inválidos.', 'danger')
 
