@@ -1,0 +1,81 @@
+.hero-section {
+    background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+    color: #fff;
+    padding: 80px 0;
+}
+
+.category-card,
+.service-card {
+    border: 0;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-card:hover,
+.service-card:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transform: translateY(-5px);
+}
+
+.category-icon {
+    color: #0d6efd;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.service-img {
+    aspect-ratio: 4 / 3;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    object-fit: cover;
+}
+
+.badge-popular {
+    background-color: #ffc107;
+    border-radius: 20px;
+    color: #000;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 5px 10px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 2;
+}
+
+.promo-banner {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    border: 3px solid #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+    color: #fff;
+    font-size: clamp(1rem, 2vw, 1.6rem);
+    font-weight: 700;
+    overflow: hidden;
+    padding: 20px 30px;
+    position: relative;
+    text-align: center;
+}
+
+.promo-label {
+    letter-spacing: 1px;
+    margin-right: 8px;
+}
+
+.promo-shine {
+    animation: shine 6s infinite linear;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    height: 200%;
+    left: -50%;
+    pointer-events: none;
+    position: absolute;
+    top: -50%;
+    width: 200%;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) translateY(-100%); }
+    50% { transform: translateX(100%) translateY(100%); }
+    100% { transform: translateX(-100%) translateY(-100%); }
+}
