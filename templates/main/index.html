@@ -1,177 +1,81 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HandLink - Encontre os melhores serviços</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="/static/css/base.css">
-    <link rel="stylesheet" href="/static/css/main.css">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold text-primary brand-mark" href="/">
-                <i class="fa-solid fa-handshake"></i>
-                HandLink
-            </a>
+{% extends "main/base.html" %}
 
-            <button
-                class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav"
-                aria-controls="navbarNav"
-                aria-expanded="false"
-                aria-label="Abrir menu"
-            >
-                <span class="navbar-toggler-icon"></span>
-            </button>
+{% block title %}HandLink - Encontre os melhores serviços{% endblock %}
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#categorias">Categorias</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#servicos">Serviços</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#contato">Contato</a>
-                    </li>
-                    <li class="nav-item ms-lg-3">
-                        <a class="btn btn-outline-primary me-lg-2" href="/login">Entrar</a>
-                    </li>
-                    <li class="nav-item mt-2 mt-lg-0">
-                        <a class="btn btn-primary" href="/signup">Cadastrar</a>
-                    </li>
-                </ul>
+{% block content %}
+<header class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Conectando você aos melhores profissionais</h1>
+        <p class="lead mb-4">De pequenos reparos a grandes reformas. Encontre quem você precisa em minutos.</p>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form class="d-flex flex-column flex-sm-row gap-2" id="search-form">
+                    <input
+                        class="form-control form-control-lg"
+                        id="search-input"
+                        name="q"
+                        type="search"
+                        placeholder="O que você está precisando hoje? Ex: eletricista"
+                    >
+                    <button class="btn btn-dark btn-lg" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Buscar
+                    </button>
+                </form>
             </div>
         </div>
-    </nav>
+    </div>
+</header>
 
-    <header class="hero-section text-center">
-        <div class="container">
-            <h1 class="display-4 fw-bold mb-3">Conectando você aos melhores profissionais</h1>
-            <p class="lead mb-4">De pequenos reparos a grandes reformas. Encontre quem você precisa em minutos.</p>
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <form class="d-flex flex-column flex-sm-row gap-2" id="search-form">
-                        <input
-                            class="form-control form-control-lg"
-                            id="search-input"
-                            name="q"
-                            type="search"
-                            placeholder="O que você está precisando hoje? Ex: eletricista"
-                        >
-                        <button class="btn btn-dark btn-lg" type="submit">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            Buscar
-                        </button>
-                    </form>
+{% include 'main/partials/ad.html' %}
+
+<section class="py-5" id="categorias">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">Categorias de serviços</h2>
+        <div class="row g-4 justify-content-center" id="categories-container">
+            <div class="col-12 text-center text-muted">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2">Carregando categorias...</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-white" id="servicos">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
+            <h2 class="fw-bold mb-0">Serviços em alta <i class="fa-solid fa-fire text-danger"></i></h2>
+            <a href="#servicos" class="text-decoration-none fw-bold">Ver todos</a>
+        </div>
+        <p class="text-muted mb-4" id="services-subtitle">Baseado nos agendamentos mais concluídos do último mês.</p>
+
+        <div class="row g-4" id="services-container">
+            <div class="col-12 text-center text-muted">
+                <div class="spinner-border text-danger" role="status"></div>
+                <p class="mt-2">Buscando serviços em alta...</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5" id="contato">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h2 class="fw-bold mb-3">Contato</h2>
+                <p class="text-muted mb-4">Precisa de ajuda ou quer oferecer seus serviços? Fale com a equipe HandLink.</p>
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                    <a class="btn btn-primary btn-lg" href="mailto:contato@handlink.com">
+                        <i class="fa-solid fa-envelope"></i>
+                        Enviar e-mail
+                    </a>
+                    <a class="btn btn-outline-primary btn-lg" href="{{ url_for('auth.signup') }}">
+                        <i class="fa-solid fa-user-plus"></i>
+                        Criar conta
+                    </a>
                 </div>
             </div>
         </div>
-    </header>
-
-    <section class="py-4">
-        <div class="container">
-            <div class="promo-banner">
-                <div class="promo-shine"></div>
-                <span class="promo-label">Promoção do dia:</span>
-                <span>CONTRATE SEU PRIMEIRO SERVIÇO COM DESCONTO</span>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-5" id="categorias">
-        <div class="container">
-            <h2 class="text-center fw-bold mb-5">Categorias de serviços</h2>
-            <div class="row g-4 justify-content-center" id="categories-container">
-                <div class="col-12 text-center text-muted">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <p class="mt-2">Carregando categorias...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-5 bg-white" id="servicos">
-        <div class="container">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
-                <h2 class="fw-bold mb-0">Serviços em alta <i class="fa-solid fa-fire text-danger"></i></h2>
-                <a href="#servicos" class="text-decoration-none fw-bold">Ver todos</a>
-            </div>
-            <p class="text-muted mb-4" id="services-subtitle">Baseado nos agendamentos mais concluídos do último mês.</p>
-
-            <div class="row g-4" id="services-container">
-                <div class="col-12 text-center text-muted">
-                    <div class="spinner-border text-danger" role="status"></div>
-                    <p class="mt-2">Buscando serviços em alta...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-5" id="contato">
-        <div class="container">
-            <div class="row justify-content-center text-center">
-                <div class="col-lg-8">
-                    <h2 class="fw-bold mb-3">Contato</h2>
-                    <p class="text-muted mb-4">Precisa de ajuda ou quer oferecer seus serviços? Fale com a equipe HandLink.</p>
-                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
-                        <a class="btn btn-primary btn-lg" href="mailto:contato@handlink.com">
-                            <i class="fa-solid fa-envelope"></i>
-                            Enviar e-mail
-                        </a>
-                        <a class="btn btn-outline-primary btn-lg" href="/signup">
-                            <i class="fa-solid fa-user-plus"></i>
-                            Criar conta
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="bg-dark text-white py-5 mt-5">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-12 col-md-4">
-                    <h3 class="h5 fw-bold">HandLink</h3>
-                    <p class="mb-0 text-white-50">Conectando você aos melhores profissionais.</p>
-                </div>
-
-                <div class="col-6 col-md-4">
-                    <h4 class="h6 fw-bold">Serviços</h4>
-                    <ul class="list-unstyled mb-0 text-white-50">
-                        <li>Pedreiro</li>
-                        <li>Eletricista</li>
-                        <li>Encanador</li>
-                    </ul>
-                </div>
-
-                <div class="col-6 col-md-4">
-                    <h4 class="h6 fw-bold">Institucional</h4>
-                    <ul class="list-unstyled mb-0 text-white-50">
-                        <li>Sobre o HandLink</li>
-                        <li>Oferecer um serviço</li>
-                        <li>Entrar em contato</li>
-                    </ul>
-                </div>
-            </div>
-
-            <hr class="border-secondary my-4">
-
-            <p class="mb-0 text-center text-white-50">&copy; 2026 UVV - Vila Velha, ES | Todos os direitos reservados.</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/main.js"></script>
-</body>
-</html>
+    </div>
+</section>
+{% endblock %}

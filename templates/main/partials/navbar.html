@@ -28,12 +28,28 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#servicos">Serviços</a>
                 </li>
-                <li class="nav-item ms-lg-3">
-                    <a class="btn btn-outline-primary me-lg-2" href="/login">Entrar</a>
+                <li class="nav-item ms-lg-2 me-lg-3 mt-2 mt-lg-0">
+                    <a class="btn btn-dark d-flex align-items-center gap-2" href="{{ url_for('service.create') }}">
+                        <i class="fa-solid fa-circle-plus"></i>
+                        <span>Anunciar Serviço</span>
+                    </a>
                 </li>
-                <li class="nav-item mt-2 mt-lg-0">
-                    <a class="btn btn-primary" href="/signup">Cadastrar</a>
-                </li>
+                
+                {% if not current_user.is_authenticated %}
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-outline-primary me-lg-2" href="{{ url_for('auth.login') }}">Entrar</a>
+                    </li>
+                    <li class="nav-item mt-2 mt-lg-0">
+                        <a class="btn btn-primary" href="{{ url_for('auth.signup') }}">Cadastrar</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item ms-lg-3">
+                        <span class="navbar-text me-lg-3">Olá, <strong>{{ current_user.name }}</strong>!</span>
+                    </li>
+                    <li class="nav-item mt-2 mt-lg-0">
+                        <a class="btn btn-danger" href="{{ url_for('auth.logout') }}">Sair</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>

@@ -149,3 +149,40 @@ function renderServices(services, emptyMessage = "Nenhum serviço disponível no
         container.appendChild(col);
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Seleciona todas as mensagens de alerta na tela
+    const flashMessages = document.querySelectorAll('.alert');
+    
+    flashMessages.forEach(function(alert) {
+        // Pega a barrinha de progresso específica desse alerta
+        const progressBar = alert.querySelector('.flash-progress-bar');
+        
+        // Faz a barrinha diminuir suavemente (5 segundos de duração)
+        if (progressBar) {
+            // Um pequeno delay de 50ms apenas para o navegador renderizar o 100% inicial
+            setTimeout(function() {
+                progressBar.style.transition = 'width 5s linear';
+                progressBar.style.width = '0%';
+            }, 50);
+        }
+
+        // Timer de 5 segundos para remover a mensagem
+        setTimeout(function() {
+            // Inicia o fade out do Bootstrap
+            alert.classList.remove('show');
+            
+            // Aguarda o fade out acabar (150ms)
+            setTimeout(function() {
+                const parentContainer = alert.parentElement;
+                alert.remove();
+                
+                // Remove o container pai se não houver mais nenhuma mensagem
+                if (parentContainer && parentContainer.children.length === 0) {
+                    parentContainer.remove();
+                }
+            }, 150);
+            
+        }, 2500);
+    });
+});
