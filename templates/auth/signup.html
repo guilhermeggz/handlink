@@ -1,83 +1,86 @@
 {% extends "auth/base.html" %}
+
+{% block title %}Cadastrar | HandLink{% endblock %}
+
+{% block nav_action %}
+<li class="nav-item ms-lg-3">
+    <a class="btn btn-outline-primary" href="/login">Entrar</a>
+</li>
+{% endblock %}
+
+{% block hero %}
+<h1 class="display-5 fw-bold mb-3">Crie sua conta</h1>
+<p class="lead mb-0">Encontre serviços, acompanhe solicitações e fale com profissionais em poucos passos.</p>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="columns is-centered">
-        <div class="column is 8-tablet is-6-desktop">
-            <h1 class="title is-2">Crie sua conta</h1>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="notification is-{{ category }}">
-                            {{ message }}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card auth-card">
+            <div class="card-body p-4 p-md-5">
+                <div class="mb-4">
+                    <h2 class="h3 fw-bold mb-2">Cadastro</h2>
+                    <p class="text-muted mb-0">Preencha seus dados para começar a usar o HandLink.</p>
+                </div>
+
+                <form method="POST" action="/signup" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label fw-semibold") }}
+                        {{ form.name(class="form-control is-invalid" if form.name.errors else "form-control") }}
+                        {% for error in form.name.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-7 mb-3">
+                            {{ form.email.label(class="form-label fw-semibold") }}
+                            {{ form.email(class="form-control is-invalid" if form.email.errors else "form-control") }}
+                            {% for error in form.email.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
                         </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
 
-            <form method="POST" action="{{ url_for('auth.signup') }}">
-                {{ form.hidden_tag() }}
-
-                <div class="field">
-                    {{ form.name.label(class="label") }}
-                    <div class="control">
-                        {{ form.name(class="input") }}
+                        <div class="col-md-5 mb-3">
+                            {{ form.cpf.label(class="form-label fw-semibold") }}
+                            {{ form.cpf(class="form-control is-invalid" if form.cpf.errors else "form-control") }}
+                            {% for error in form.cpf.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>
 
-                <div class="field">
-                    {{ form.email.label(class="label") }}
-                    <div class="control">
-                        {{ form.email(class="input is-danger" if form.email.errors else "input") }}
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            {{ form.password.label(class="form-label fw-semibold") }}
+                            {{ form.password(class="form-control is-invalid" if form.password.errors else "form-control") }}
+                            {% for error in form.password.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            {{ form.confirm_password.label(class="form-label fw-semibold") }}
+                            {{ form.confirm_password(class="form-control is-invalid" if form.confirm_password.errors else "form-control") }}
+                            {% for error in form.confirm_password.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
                     </div>
-                    {% if form.email.errors %}
-                        {% for error in form.email.errors %}
-                            <p class="help is-danger">{{ error }}</p>
-                        {% endfor %}
-                    {% endif %}
-                </div>
 
-                <div class="field">
-                    {{ form.password.label(class="label") }}
-                    <div class="control">
-                        {{ form.password(class="input") }}
+                    <div class="d-grid gap-2">
+                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                        <a href="/" class="btn btn-light btn-lg">Cancelar</a>
                     </div>
-                </div>
+                </form>
 
-                <div class="field">
-                    {{ form.confirm_password.label(class="label") }}
-                    <div class="control">
-                        {{ form.confirm_password(class="input is-danger" if form.confirm_password.errors else "input") }}
-                    </div>
-                    {% if form.confirm_password.errors %}
-                        {% for error in form.confirm_password.errors %}
-                            <p class="help is-danger">{{ error }}</p>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-
-                <div class="field">
-                    {{ form.cpf.label(class="label") }}
-                    <div class="control">
-                        {{ form.cpf(class="input is-danger" if form.cpf.errors else "input") }}
-                    </div>
-                    {% if form.cpf.errors %}
-                        {% for error in form.cpf.errors %}
-                            <p class="help is-danger">{{ error }}</p>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-
-                <div class="field is-grouped">
-                    <div class="control">
-                        {{ form.submit(class="button is-link") }}
-                    </div>
-                    <div class="control">
-                        <a href="{{ url_for('main.index') }}" class="button is-light">Cancelar</a>
-                    </div>
-                </div>
-
-            </form>
-
+                <p class="text-center text-muted mt-4 mb-0">
+                    Já tem uma conta?
+                    <a href="/login" class="fw-semibold text-decoration-none">Entrar</a>
+                </p>
+            </div>
         </div>
     </div>
 </div>

@@ -1,42 +1,58 @@
 {% extends "auth/base.html" %}
-{% block content %}
-<div class="container">
-    <div class="columns is-centered">
-        <div class="column is 8-tablet is-6-desktop">
-            <h1 class="title is-2">Faça seu login</h1>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="notification is-{{ category }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
 
-            <form method="POST" action="{{ url_for('auth.login') }}">
-                {{ form.hidden_tag() }}
-                <div class="field">
-                    {{ form.email.label(class="label") }}
-                    <div class="control">
-                        {{ form.email(class="input") }}
-                    </div>
+{% block title %}Entrar | HandLink{% endblock %}
+
+{% block nav_action %}
+<li class="nav-item ms-lg-3">
+    <a class="btn btn-primary" href="/signup">Cadastrar</a>
+</li>
+{% endblock %}
+
+{% block hero %}
+<h1 class="display-5 fw-bold mb-3">Acesse sua conta</h1>
+<p class="lead mb-0">Continue conectado aos profissionais e serviços que você precisa.</p>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-5">
+        <div class="card auth-card">
+            <div class="card-body p-4 p-md-5">
+                <div class="mb-4">
+                    <h2 class="h3 fw-bold mb-2">Entrar</h2>
+                    <p class="text-muted mb-0">Use seu e-mail e senha para continuar.</p>
                 </div>
-                <div class="field">
-                    {{ form.password.label(class="label") }}
-                    <div class="control">
-                        {{ form.password(class="input") }}
+
+                <form method="POST" action="/login" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.email.label(class="form-label fw-semibold") }}
+                        {{ form.email(class="form-control is-invalid" if form.email.errors else "form-control") }}
+                        {% for error in form.email.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
                     </div>
-                </div>
-                <div class="field is-grouped">
-                    <div class="control">
-                        {{ form.submit(class="button is-link") }}
+
+                    <div class="mb-4">
+                        {{ form.password.label(class="form-label fw-semibold") }}
+                        {{ form.password(class="form-control is-invalid" if form.password.errors else "form-control") }}
+                        {% for error in form.password.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
                     </div>
-                    <div class="control">
-                        <a href="{{ url_for('main.index') }}" class="button is-light">Cancelar</a>
+
+                    <div class="d-grid gap-2">
+                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                        <a href="/" class="btn btn-light btn-lg">Cancelar</a>
                     </div>
-                </div>
-            </form>
+                </form>
+
+                <p class="text-center text-muted mt-4 mb-0">
+                    Ainda não tem conta?
+                    <a href="/signup" class="fw-semibold text-decoration-none">Cadastre-se</a>
+                </p>
+            </div>
         </div>
     </div>
 </div>

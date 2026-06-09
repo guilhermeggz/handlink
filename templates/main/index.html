@@ -3,62 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Handlink - Encontre os Melhores Serviços</title>
-    <!-- Bootstrap CSS -->
+    <title>HandLink - Encontre os melhores serviços</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; }
-        .hero-section { background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: white; padding: 80px 0; }
-        .category-card, .service-card { transition: transform 0.3s ease, box-shadow 0.3s ease; border: none; border-radius: 12px; }
-        .category-card:hover, .service-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); cursor: pointer; }
-        .category-icon { font-size: 2.5rem; color: #0d6efd; margin-bottom: 15px; }
-        .service-img { height: 200px; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px; }
-        .badge-popular { position: absolute; top: 10px; right: 10px; background-color: #ffc107; color: #000; padding: 5px 10px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; z-index: 2;}
-    </style>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/main.css">
 </head>
 <body>
-
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="#"><i class="fa-solid fa-handshake"></i> Handlink</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <a class="navbar-brand fw-bold text-primary brand-mark" href="/">
+                <i class="fa-solid fa-handshake"></i>
+                HandLink
+            </a>
+
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Abrir menu"
+            >
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="#">Início</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Como Funciona</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Seja um Profissional</a></li>
-                    <li class="nav-item ms-lg-3"><a class="btn btn-outline-primary me-2" href="#">Entrar</a></li>
-                    <li class="nav-item"><a class="btn btn-primary" href="#">Cadastrar</a></li>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#categorias">Categorias</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#servicos">Serviços</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contato">Contato</a>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-outline-primary me-lg-2" href="/login">Entrar</a>
+                    </li>
+                    <li class="nav-item mt-2 mt-lg-0">
+                        <a class="btn btn-primary" href="/signup">Cadastrar</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <header class="hero-section text-center">
         <div class="container">
             <h1 class="display-4 fw-bold mb-3">Conectando você aos melhores profissionais</h1>
             <p class="lead mb-4">De pequenos reparos a grandes reformas. Encontre quem você precisa em minutos.</p>
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <form class="d-flex">
-                        <input class="form-control form-control-lg me-2" type="search" placeholder="O que você está precisando hoje? (ex: Eletricista, Encanador)">
-                        <button class="btn btn-dark btn-lg" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+                    <form class="d-flex flex-column flex-sm-row gap-2" id="search-form">
+                        <input
+                            class="form-control form-control-lg"
+                            id="search-input"
+                            name="q"
+                            type="search"
+                            placeholder="O que você está precisando hoje? Ex: eletricista"
+                        >
+                        <button class="btn btn-dark btn-lg" type="submit">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            Buscar
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Categorias Section -->
-    <section class="py-5">
+    <section class="py-4">
         <div class="container">
-            <h2 class="text-center fw-bold mb-5">Categorias de Serviços</h2>
+            <div class="promo-banner">
+                <div class="promo-shine"></div>
+                <span class="promo-label">Promoção do dia:</span>
+                <span>CONTRATE SEU PRIMEIRO SERVIÇO COM DESCONTO</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5" id="categorias">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5">Categorias de serviços</h2>
             <div class="row g-4 justify-content-center" id="categories-container">
                 <div class="col-12 text-center text-muted">
                     <div class="spinner-border text-primary" role="status"></div>
@@ -68,16 +100,15 @@
         </div>
     </section>
 
-    <!-- Serviços em Alta Section -->
-    <section class="py-5 bg-white">
+    <section class="py-5 bg-white" id="servicos">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center mb-5">
-                <h2 class="fw-bold mb-0">Serviços em Alta <i class="fa-solid fa-fire text-danger"></i></h2>
-                <a href="#" class="text-decoration-none fw-bold">Ver todos</a>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
+                <h2 class="fw-bold mb-0">Serviços em alta <i class="fa-solid fa-fire text-danger"></i></h2>
+                <a href="#servicos" class="text-decoration-none fw-bold">Ver todos</a>
             </div>
-            <p class="text-muted mb-4">Baseado nos agendamentos mais concluídos do último mês.</p>
-            
-            <div class="row g-4" id="trending-services-container">
+            <p class="text-muted mb-4" id="services-subtitle">Baseado nos agendamentos mais concluídos do último mês.</p>
+
+            <div class="row g-4" id="services-container">
                 <div class="col-12 text-center text-muted">
                     <div class="spinner-border text-danger" role="status"></div>
                     <p class="mt-2">Buscando serviços em alta...</p>
@@ -86,109 +117,61 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-5">
-        <div class="container text-center">
-            <p class="mb-0">&copy; 2026 Handlink. Todos os direitos reservados.</p>
+    <section class="py-5" id="contato">
+        <div class="container">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8">
+                    <h2 class="fw-bold mb-3">Contato</h2>
+                    <p class="text-muted mb-4">Precisa de ajuda ou quer oferecer seus serviços? Fale com a equipe HandLink.</p>
+                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                        <a class="btn btn-primary btn-lg" href="mailto:contato@handlink.com">
+                            <i class="fa-solid fa-envelope"></i>
+                            Enviar e-mail
+                        </a>
+                        <a class="btn btn-outline-primary btn-lg" href="/signup">
+                            <i class="fa-solid fa-user-plus"></i>
+                            Criar conta
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-12 col-md-4">
+                    <h3 class="h5 fw-bold">HandLink</h3>
+                    <p class="mb-0 text-white-50">Conectando você aos melhores profissionais.</p>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <h4 class="h6 fw-bold">Serviços</h4>
+                    <ul class="list-unstyled mb-0 text-white-50">
+                        <li>Pedreiro</li>
+                        <li>Eletricista</li>
+                        <li>Encanador</li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <h4 class="h6 fw-bold">Institucional</h4>
+                    <ul class="list-unstyled mb-0 text-white-50">
+                        <li>Sobre o HandLink</li>
+                        <li>Oferecer um serviço</li>
+                        <li>Entrar em contato</li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="border-secondary my-4">
+
+            <p class="mb-0 text-center text-white-50">&copy; 2026 UVV - Vila Velha, ES | Todos os direitos reservados.</p>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Integração com Backend -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            loadCategories();
-            loadTrendingServices();
-        });
-
-        async function loadCategories() {
-            const container = document.getElementById('categories-container');
-            try {
-                // ATENÇÃO: Descomente o código abaixo e ajuste a URL da sua API para buscar do banco
-                // const response = await fetch('/api/categories');
-                // const categories = await response.json();
-                
-                // MOCK de dados para simular a resposta do banco de dados
-                const categories = [
-                    { id: 1, nome: "Limpeza", icone: "fa-broom" },
-                    { id: 2, nome: "Eletricidade", icone: "fa-bolt" },
-                    { id: 3, nome: "Encanamento", icone: "fa-wrench" },
-                    { id: 4, nome: "Montagem", icone: "fa-hammer" },
-                    { id: 5, nome: "Pintura", icone: "fa-paint-roller" },
-                    { id: 6, nome: "Frete", icone: "fa-truck" }
-                ];
-
-                container.innerHTML = ''; 
-
-                categories.forEach(cat => {
-                    const col = document.createElement('div');
-                    col.className = 'col-6 col-md-4 col-lg-2';
-                    col.innerHTML = `
-                        <div class="card category-card h-100 text-center p-3 shadow-sm">
-                            <div class="card-body">
-                                <i class="fa-solid ${cat.icone} category-icon"></i>
-                                <h6 class="card-title fw-bold text-dark mt-2">${cat.nome}</h6>
-                            </div>
-                        </div>
-                    `;
-                    container.appendChild(col);
-                });
-            } catch (error) {
-                container.innerHTML = '<p class="text-danger">Erro ao carregar categorias.</p>';
-            }
-        }
-
-        async function loadTrendingServices() {
-            const container = document.getElementById('trending-services-container');
-            try {
-                // ATENÇÃO: A Query no seu backend deve ser algo como:
-                // SELECT servicos.*, COUNT(appointments.id) as total_appointments 
-                // FROM servicos JOIN appointments ON servicos.id = appointments.service_id 
-                // WHERE appointments.status = 'finalizado' AND appointments.date >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
-                // GROUP BY servicos.id ORDER BY total_appointments DESC LIMIT 4
-                
-                // const response = await fetch('/api/services/trending');
-                // const services = await response.json();
-
-                // MOCK de dados para simular a resposta do banco de dados
-                const services = [
-                    { id: 101, titulo: "Instalação de Ar Condicionado", profissional: "João Silva", avaliacao: 4.9, imagem: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=500&q=60", preco: "R$ 150,00" },
-                    { id: 102, titulo: "Faxina Completa", profissional: "Maria Souza", avaliacao: 5.0, imagem: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=500&q=60", preco: "R$ 120,00" },
-                    { id: 103, titulo: "Reparo Hidráulico", profissional: "Carlos Lima", avaliacao: 4.8, imagem: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=500&q=60", preco: "R$ 90,00" },
-                    { id: 104, titulo: "Pintura de Interior", profissional: "Ana Beatriz", avaliacao: 4.7, imagem: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=500&q=60", preco: "Sob consulta" }
-                ];
-
-                container.innerHTML = '';
-
-                services.forEach(srv => {
-                    const col = document.createElement('div');
-                    col.className = 'col-12 col-md-6 col-lg-3';
-                    col.innerHTML = `
-                        <div class="card service-card h-100 shadow-sm position-relative">
-                            <span class="badge-popular"><i class="fa-solid fa-star"></i> Em Alta</span>
-                            <img src="${srv.imagem}" class="card-img-top service-img" alt="${srv.titulo}">
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold text-truncate" title="${srv.titulo}">${srv.titulo}</h5>
-                                <p class="text-muted mb-2 small"><i class="fa-solid fa-user text-primary"></i> ${srv.profissional}</p>
-                                <div class="d-flex justify-content-between align-items-center mt-3">
-                                    <span class="text-success fw-bold">${srv.preco}</span>
-                                    <span class="badge bg-light text-dark border"><i class="fa-solid fa-star text-warning"></i> ${srv.avaliacao}</span>
-                                </div>
-                            </div>
-                            <div class="card-footer bg-white border-top-0 pb-3">
-                                <button class="btn btn-outline-primary w-100">Ver Detalhes</button>
-                            </div>
-                        </div>
-                    `;
-                    container.appendChild(col);
-                });
-
-            } catch (error) {
-                container.innerHTML = '<p class="text-danger">Erro ao carregar serviços em alta.</p>';
-            }
-        }
-    </script>
+    <script src="/static/js/main.js"></script>
 </body>
 </html>
