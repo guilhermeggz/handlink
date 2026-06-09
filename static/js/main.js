@@ -1,3 +1,21 @@
+const fallbackCategories = [
+    { id: 1, nome: "Limpeza", icone: "fa-broom" },
+    { id: 2, nome: "Eletricidade", icone: "fa-bolt" },
+    { id: 3, nome: "Encanamento", icone: "fa-wrench" },
+    { id: 4, nome: "Montagem", icone: "fa-hammer" },
+    { id: 5, nome: "Pintura", icone: "fa-paint-roller" },
+    { id: 6, nome: "Frete", icone: "fa-truck" },
+];
+
+const categoryIcons = {
+    limpeza: "fa-broom",
+    eletricidade: "fa-bolt",
+    encanamento: "fa-wrench",
+    montagem: "fa-hammer",
+    pintura: "fa-paint-roller",
+    frete: "fa-truck",
+};
+
 const fallbackServices = [
     {
         titulo: "Instalação de ar-condicionado",
@@ -42,36 +60,59 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-function loadCategories() {
+async function loadCategories() {
     const container = document.getElementById("categories-container");
     if (!container) {
         return;
     }
 
-    const categories = [
-        { nome: "Limpeza", icone: "fa-broom" },
-        { nome: "Eletricidade", icone: "fa-bolt" },
-        { nome: "Encanamento", icone: "fa-wrench" },
-        { nome: "Montagem", icone: "fa-hammer" },
-        { nome: "Pintura", icone: "fa-paint-roller" },
-        { nome: "Frete", icone: "fa-truck" },
-    ];
+    try {
+        const response = await fetch("/api/categorias");
+        if (!response.ok) {
+            throw new Error("Erro ao buscar categorias.");
+        }
 
+        const data = await response.json();
+        const categories = data.categorias.map((category) => ({
+            id: category.id,
+            nome: category.name,
+            icone: getCategoryIcon(category.name),
+        }));
+
+        renderCategories(categories.length ? categories : fallbackCategories);
+    } catch (error) {
+        renderCategories(fallbackCategories);
+    }
+}
+
+function renderCategories(categories) {
+    const container = document.getElementById("categories-container");
     container.innerHTML = "";
 
     categories.forEach((category) => {
         const col = document.createElement("div");
         col.className = "col-6 col-md-4 col-lg-2";
         col.innerHTML = `
-            <div class="card category-card h-100 text-center p-3 shadow-sm">
-                <div class="card-body">
-                    <i class="fa-solid ${category.icone} category-icon"></i>
-                    <h6 class="card-title fw-bold text-dark mt-2">${category.nome}</h6>
+            <a href="/servicos/categoria/${category.id}" class="category-link">
+                <div class="card category-card h-100 text-center p-3 shadow-sm">
+                    <div class="card-body">
+                        <i class="fa-solid ${category.icone} category-icon"></i>
+                        <h6 class="card-title fw-bold text-dark mt-2">${category.nome}</h6>
+                    </div>
                 </div>
-            </div>
+            </a>
         `;
         container.appendChild(col);
     });
+}
+
+function getCategoryIcon(categoryName) {
+    const normalizedName = categoryName
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+    return categoryIcons[normalizedName] || "fa-briefcase";
 }
 
 async function searchServices() {
