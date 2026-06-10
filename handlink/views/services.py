@@ -281,11 +281,11 @@ def detalhes_servico(service_id):
 
 
 @bp_services.route('/servicos/agendar/<int:service_id>', methods=['GET', 'POST'])
-@login_required # Garante que apenas clientes logados acessem
 def agendar_servico(service_id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login', next=request.path))
     service = Service.query.get_or_404(service_id)
     
-    # Bloqueia se o prestador tentar agendar o próprio serviço
     if service.provider_id == current_user.id:
         flash('Você não pode agendar um serviço oferecido por você mesmo.', 'danger')
         return redirect(url_for('services.detalhes_servico', service_id=service.id))
@@ -296,7 +296,6 @@ def agendar_servico(service_id):
         data_escolhida = form.appointment_time.data
         tempo_minimo = datetime.now() + timedelta(hours=3)
         
-        # VERIFICAÇÃO DE 3 HORAS DE ANTECEDÊNCIA NA CRIAÇÃO
         if data_escolhida < tempo_minimo:
             flash('Por favor, escolha um horário com no mínimo 3 horas de antecedência.', 'warning')
             return render_template('main/request_appointment.html', form=form, service=service)
