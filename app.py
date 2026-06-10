@@ -49,4 +49,10 @@ def create_app(test_config=None):
     from handlink.ext.auth import init_app as init_login
     init_login(app) 
 
+    # ----------------------------------------------------------
+    # Flask-Admin (dashboard administrativo)
+    # ----------------------------------------------------------
+    from handlink.ext.admin import init_app as init_admin
+    init_admin(app)
+
     return app

@@ -28,6 +28,7 @@ dependencies = [
     "sqlalchemy",
     "flask-login",
     "validate-docbr",
+    "flask-admin",
 ]
 
 

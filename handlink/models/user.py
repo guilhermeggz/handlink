@@ -1,12 +1,14 @@
 from typing import List, Optional, TYPE_CHECKING
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, func, Integer, String, DateTime, Boolean
+from sqlalchemy import ForeignKey, func, Integer, String, DateTime, Boolean, select
+from sqlalchemy.ext.hybrid import hybrid_property
 from handlink.ext.db import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from handlink.models.role_user import ProviderStatus
+from handlink.models.role_user import ProviderStatus, RoleUser
+from handlink.models.role import Role
 
 if TYPE_CHECKING:
     from .role_user import RoleUser
@@ -96,9 +98,25 @@ class User(UserMixin, db.Model):
     def __repr__(self) -> str:
         return f"<User {self.email}>"
 
-    def provider_status(self) -> Optional[str]:
-        """Busca o status do usuário na associação de provider."""
-        for assoc in self.role_associations:
-            if assoc.role and assoc.role.name == 'provider':
-                return  assoc.provider_status
+# 1. Comportamento em Python (Objetos instanciados em memória)
+    @hybrid_property
+    def provider_status(self):
+        if self.role_associations:
+            for assoc in self.role_associations:
+                if assoc.role and assoc.role.name == 'provider':
+                    return assoc.provider_status
         return None
+
+    # 2. Comportamento em SQL (Tradutor de Queries para o Banco de Dados)
+    @provider_status.expression
+    def provider_status(cls):
+        return (
+            select(RoleUser.provider_status)
+            .join(Role, Role.id == RoleUser.role_id)
+            .where(
+                RoleUser.user_id == cls.id,
+                Role.name == 'provider'
+            )
+            .correlate(cls)
+            .as_scalar()
+        )
