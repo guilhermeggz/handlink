@@ -43,11 +43,43 @@
                         <a class="btn btn-primary" href="{{ url_for('auth.signup') }}">Cadastrar</a>
                     </li>
                 {% else %}
-                    <li class="nav-item ms-lg-3">
-                        <span class="navbar-text me-lg-3">Olá, <strong>{{ current_user.name }}</strong>!</span>
-                    </li>
-                    <li class="nav-item mt-2 mt-lg-0">
-                        <a class="btn btn-danger" href="{{ url_for('auth.logout') }}">Sair</a>
+                    <li class="nav-item dropdown ms-lg-3 mt-3 mt-lg-0">
+                        <button class="btn btn-light dropdown-toggle border-0 d-flex align-items-center gap-2 px-3 py-2 rounded-pill w-100" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if current_user.photo %}
+                                <img src="/static/uploads/{{ current_user.photo }}" alt="{{ current_user.name }}" class="rounded-circle object-fit-cover" style="width: 30px; height: 30px;">
+                            {% else %}
+                                <i class="fa-solid fa-circle-user text-secondary fs-5"></i>
+                            {% endif %}
+                            <span class="fw-medium text-dark">{{ current_user.name.split()[0] }}</span>
+                        </button>
+                        
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 p-2" style="min-width: 230px;" aria-labelledby="userMenu">
+                            <li><h6 class="dropdown-header text-uppercase tracking-wider small opacity-75">Minha Conta</h6></li>
+                            
+                            <li>
+                                <a class="dropdown-item py-2 rounded d-flex align-items-center {% if request.endpoint == 'services.meus_agendamentos' %}active{% endif %}" href="{{ url_for('services.meus_agendamentos') }}">
+                                    <i class="fa-solid fa-calendar-days text-muted me-2" style="width: 20px;"></i> Meus Agendamentos
+                                </a>
+                            </li>
+                            
+                            {% if current_user.provider_status and current_user.provider_status().name == 'APROVADO' %}
+                                <li><hr class="dropdown-divider opacity-25"></li>
+                                <li><h6 class="dropdown-header text-uppercase tracking-wider small text-success opacity-75">Profissional</h6></li>
+                                <li>
+                                    <a class="dropdown-item py-2 rounded text-success fw-medium d-flex align-items-center {% if request.endpoint == 'services.painel_prestador' %}active{% endif %}" href="{{ url_for('services.painel_prestador') }}">
+                                        <i class="fa-solid fa-briefcase me-2" style="width: 20px;"></i> Painel do Prestador
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            <li><hr class="dropdown-divider opacity-25"></li>
+                            
+                            <li>
+                                <a class="dropdown-item py-2 rounded text-danger d-flex align-items-center" href="{{ url_for('auth.logout') }}">
+                                    <i class="fa-solid fa-right-from-bracket me-2" style="width: 20px;"></i> Sair
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 {% endif %}
             </ul>

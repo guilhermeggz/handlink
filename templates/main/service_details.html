@@ -91,7 +91,7 @@
                 </div>
 
                 <div class="d-grid gap-2">
-                    <a href="#" class="btn btn-dark btn-lg py-3 fw-bold shadow-sm">
+                    <a href="{{ url_for('services.agendar_servico', service_id=service.id) }}" class="btn btn-dark btn-lg py-3 fw-bold shadow-sm">
                         <i class="fa-solid fa-calendar-check me-2"></i> Solicitar Agendamento
                     </a>
                 </div>

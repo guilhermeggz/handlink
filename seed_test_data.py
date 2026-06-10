@@ -10,8 +10,7 @@ DEFAULT_PASSWORD = "12345678"
 
 
 ROLES = [
-    "Admin",
-    "Cliente",
+    "admin",
     "provider",
 ]
 
@@ -39,28 +38,28 @@ USERS = [
         "email": "admin@handlink.test",
         "cpf": "00000000000",
         "phone": "11900000000",
-        "roles": ["Admin", "Cliente"],
+        "roles": ["admin", "provider"],
     },
     {
         "name": "Maria Eletricista",
         "email": "maria.eletricista@handlink.test",
         "cpf": "11111111111",
         "phone": "11911111111",
-        "roles": ["Cliente", "provider"],
+        "roles": ["provider"],
     },
     {
         "name": "Carlos Encanador",
         "email": "carlos.encanador@handlink.test",
         "cpf": "22222222222",
         "phone": "11922222222",
-        "roles": ["Cliente", "provider"],
+        "roles": ["provider"],
     },
     {
         "name": "Ana Cliente",
         "email": "ana.cliente@handlink.test",
         "cpf": "33333333333",
         "phone": "11933333333",
-        "roles": ["Cliente"],
+        "roles": [],
     },
 ]
 

@@ -1,0 +1,93 @@
+{% extends "main/base.html" %}
+{% block title %}Painel do Prestador | HandLink{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow-sm border-0 p-4 p-md-5">
+        <div class="mb-4">
+            <h2 class="h3 fw-bold text-dark mb-1"><i class="fa-solid fa-briefcase text-success me-2"></i>Painel do Profissional</h2>
+            <p class="text-muted mb-0">Controle sua agenda de serviços recebidos pela plataforma.</p>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle border-top">
+                <thead class="table-light text-secondary small text-uppercase">
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Serviço Oferecido</th>
+                        <th>Data / Hora</th>
+                        <th>Duração</th>
+                        <th>Status</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in agendamentos %}
+                    <tr class="{% if a.status == 'Cancelado' %}opacity-50{% endif %}">
+                        <td>
+                            <span class="fw-bold text-dark d-block">{{ a.client.name }}</span>
+                            <small class="text-muted"><i class="fa-solid fa-phone me-1 text-success"></i>{{ a.client.phone or 'Não informado' }}</small>
+                        </td>
+                        <td><span class="text-secondary fw-semibold">{{ a.service.name }}</span></td>
+                        <td><span class="text-dark">{{ a.appointment_time.strftime('%d/%m/%Y às %H:%M') }}</span></td>
+                        <td>{{ a.hours }} hora(s)</td>
+                        <td>
+                            {% if a.status == 'Pendente' %}<span class="badge bg-warning-subtle text-warning-heading px-2.5 py-1.5 rounded-pill">Aguardando Você</span>
+                            {% elif a.status == 'Confirmado' %}<span class="badge bg-success-subtle text-success px-2.5 py-1.5 rounded-pill">Confirmado</span>
+                            {% elif a.status == 'Finalizado' %}<span class="badge bg-light text-secondary px-2.5 py-1.5 rounded-pill border">Concluído</span>
+                            {% else %}<span class="badge bg-danger-subtle text-danger px-2.5 py-1.5 rounded-pill">Cancelado</span>{% endif %}
+                        </td>
+                        <td class="text-end">
+                            <div class="d-inline-flex gap-1">
+                                {% if a.status == 'Pendente' %}
+                                    <form action="{{ url_for('services.painel_prestador') }}" method="POST">
+                                        {{ form.csrf_token }}
+                                        <input type="hidden" name="appointment_id" value="{{ a.id }}">
+                                        <input type="hidden" name="status" value="Confirmado">
+                                        <button type="submit" class="btn btn-sm btn-success px-3">
+                                            <i class="fa-solid fa-check me-1"></i> Aceitar
+                                        </button>
+                                    </form>
+                                    
+                                    <form action="{{ url_for('services.painel_prestador') }}" method="POST" onsubmit="return confirm('Recusar e cancelar este serviço?');">
+                                        {{ form.csrf_token }}
+                                        <input type="hidden" name="appointment_id" value="{{ a.id }}">
+                                        <input type="hidden" name="status" value="Cancelado">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="fa-solid fa-xmark"></i> Recusar
+                                        </button>
+                                    </form>
+                                
+                                {% elif a.status == 'Confirmado' %}
+                                    <form action="{{ url_for('services.painel_prestador') }}" method="POST">
+                                        {{ form.csrf_token }}
+                                        <input type="hidden" name="appointment_id" value="{{ a.id }}">
+                                        <input type="hidden" name="status" value="Finalizado">
+                                        <button type="submit" class="btn btn-sm btn-dark px-3">
+                                            <i class="fa-solid fa-circle-check me-1"></i> Finalizar Serviço
+                                        </button>
+                                    </form>
+                                    
+                                    <form action="{{ url_for('services.painel_prestador') }}" method="POST" onsubmit="return confirm('Deseja cancelar este serviço já confirmado?');">
+                                        {{ form.csrf_token }}
+                                        <input type="hidden" name="appointment_id" value="{{ a.id }}">
+                                        <input type="hidden" name="status" value="Cancelado">
+                                        <button type="submit" class="btn btn-sm btn-link text-danger text-decoration-none small">Cancelar</button>
+                                    </form>
+                                
+                                {% else %}
+                                    <span class="text-muted small fst-italic">Histórico fechado</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-5">Nenhum agendamento recebido ainda.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

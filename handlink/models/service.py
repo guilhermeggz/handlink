@@ -22,6 +22,7 @@ class Service(db.Model):
     name: Mapped[str] = mapped_column(String(50), index=True)
     desc: Mapped[str] = mapped_column(Text)
     price: Mapped[Decimal] = mapped_column(Numeric(10,2))
+    photo: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False, index=True)
 

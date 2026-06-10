@@ -1,0 +1,93 @@
+{% extends "main/base.html" %}
+{% block title %}Meus Agendamentos | HandLink{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow-sm border-0 p-4 p-md-5">
+        <div class="mb-4">
+            <h2 class="h3 fw-bold text-dark mb-1"><i class="fa-solid fa-calendar-days text-primary me-2"></i>Minhas Solicitações</h2>
+            <p class="text-muted mb-0">Gerencie seus pedidos. Alterações permitidas com até 3 dias de antecedência.</p>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle border-top">
+                <thead class="table-light text-secondary small text-uppercase">
+                    <tr>
+                        <th>Serviço / Prestador</th>
+                        <th>Data e Hora</th>
+                        <th>Duração</th>
+                        <th>Status</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in agendamentos %}
+                    <tr>
+                        <td>
+                            <span class="fw-bold text-dark d-block">{{ a.service.name }}</span>
+                            <small class="text-muted"><i class="fa-solid fa-user me-1"></i>{{ a.service.provider.name }}</small>
+                        </td>
+                        <td><span class="fw-semibold text-secondary">{{ a.appointment_time.strftime('%d/%m/%Y às %H:%M') }}</span></td>
+                        <td>{{ a.hours }} hora(s)</td>
+                        <td>
+                            {% if a.status == 'Pendente' %}<span class="badge bg-warning-subtle text-warning-heading px-2 py-1 rounded-pill small">Pendente</span>
+                            {% elif a.status == 'Confirmado' %}<span class="badge bg-success-subtle text-success px-2 py-1 rounded-pill small">Confirmado</span>
+                            {% elif a.status == 'Finalizado' %}<span class="badge bg-light text-secondary px-2 py-1 rounded-pill border small">Finalizado</span>
+                            {% else %}<span class="badge bg-danger-subtle text-danger px-2 py-1 rounded-pill small">Cancelado</span>{% endif %}
+                        </td>
+                        <td class="text-end">
+                            {% if a.pode_modificar %}
+                                <button class="btn btn-sm btn-outline-dark me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ a.id }}">
+                                    <i class="fa-solid fa-pen-to-square"></i> Alterar
+                                </button>
+                                
+                                <form action="{{ url_for('services.meus_agendamentos') }}" method="POST" class="d-inline" onsubmit="return confirm('Confirmar cancelamento?');">
+                                    {{ form.csrf_token }}
+                                    <input type="hidden" name="appointment_id" value="{{ a.id }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+
+                                <div class="modal fade" id="editModal{{ a.id }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content border-0 shadow">
+                                            <div class="modal-header bg-light">
+                                                <h5 class="modal-title fw-bold">Modificar Agendamento</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <form action="{{ url_for('services.alterar_agendamento_cliente', id=a.id) }}" method="POST">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                <div class="modal-body text-start p-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold">Nova Data e Hora</label>
+                                                        <input type="datetime-local" name="appointment_time" class="form-control" value="{{ a.appointment_time.strftime('%Y-%m-%dT%H:%M') }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold">Quantidade de Horas</label>
+                                                        <input type="number" name="hours" class="form-control" min="1" max="24" value="{{ a.hours }}" required>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer border-0">
+                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Fechar</button>
+                                                    <button type="submit" class="btn btn-dark px-4">Salvar</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <span class="text-muted small"><i class="fa-solid fa-lock me-1"></i> Bloqueado</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-5">Nenhum agendamento realizado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
