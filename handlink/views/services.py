@@ -262,4 +262,14 @@ def seja_prestador():
         flash('Sua solicitação para ser prestador foi enviada com sucesso e está em análise!', 'success')
         return redirect(url_for('main.index'))
     
-    return render_template('main/seja_prestador.html', form=form)
+    return render_template('main/be_a_provider.html', form=form)
+
+@bp_services.route('/servicos/detalhes/<int:service_id>')
+def detalhes_servico(service_id):
+
+    service = Service.query.get_or_404(service_id)
+    
+    return render_template(
+        'main/service_details.html', 
+        service=service
+    )

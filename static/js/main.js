@@ -267,14 +267,14 @@ function appendServices(services, emptyMessage = "Nenhum serviço disponível no
                         ${escapeHtml(service.profissional)}
                     </p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="text-success fw-bold">${escapeHtml(service.preco)}</span>
+                        <span class="text-success fw-bold">${escapeHtml(service.preco)}/hora</span>
                         <span class="badge bg-light text-dark border">
                             <i class="fa-solid fa-star text-warning"></i>
                             ${escapeHtml(service.avaliacao)}
                         </span>
                     </div>
                 </div>
-                <div class="card-footer bg-white border-top-0 pb-3">
+                <div class="card-footer bg-white border-top-0 pb-3" href="{{ url_for('services.detalhes_servico', service_id=service.id) }}>
                     <a class="btn btn-outline-primary w-100" href="${service.detalhesUrl}">Ver detalhes</a>
                 </div>
             </div>
