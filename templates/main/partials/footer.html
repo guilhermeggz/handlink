@@ -2,31 +2,39 @@
     <div class="container">
         <div class="row g-4">
             <div class="col-12 col-md-4">
-                <h3 class="h5 fw-bold">HandLink</h3>
-                <p class="mb-0 text-white-50">Conectando você aos melhores profissionais.</p>
+                <h3 class="h5 fw-bold text-white mb-2">HandLink</h3>
+                <p class="mb-0 text-white-50 small">Conectando você à melhor mão de obra local com segurança e praticidade.</p>
             </div>
 
             <div class="col-6 col-md-4">
-                <h4 class="h6 fw-bold">Serviços</h4>
-                <ul class="list-unstyled mb-0 text-white-50">
-                    <li>Pedreiro</li>
-                    <li>Eletricista</li>
-                    <li>Encanador</li>
-                </ul>
+                <h4 class="h6 fw-bold text-white mb-3">Serviços Disponíveis</h4>
+                <ul id="categories-footer-container" class="list-unstyled mb-0">
+                    </ul>
             </div>
 
             <div class="col-6 col-md-4">
-                <h4 class="h6 fw-bold">Institucional</h4>
-                <ul class="list-unstyled mb-0 text-white-50">
-                    <li>Sobre o HandLink</li>
-                    <li>Oferecer um serviço</li>
-                    <li>Entrar em contato</li>
+                <h4 class="h6 fw-bold text-white mb-3">Institucional</h4>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <a href="{{ url_for('main.about') }}" class="text-white-50 text-decoration-none link-light small">Sobre o HandLink</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{{ url_for('services.painel_prestador') }}" class="text-white-50 text-decoration-none link-light small">Oferecer um serviço</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="mailto:suporte@handlink.com.br?subject=Suporte%20-%20HandLink" class="text-white-50 text-decoration-none link-light small">
+                            <i class="fa-regular fa-envelope me-1"></i> Entrar em contato
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
 
-        <hr class="border-secondary my-4">
+        <hr class="border-secondary my-4 opacity-25">
 
-        <p class="mb-0 text-center text-white-50">&copy; 2026 UVV - Vila Velha, ES | Todos os direitos reservados.</p>
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-white-50 small">
+            <p class="mb-0 text-center text-sm-start">&copy; 2026 UVV - Vila Velha, ES | Todos os direitos reservados.</p>
+            <p class="mb-0 text-center text-sm-end mt-2 mt-sm-0">Desenvolvido para conectar talentos.</p>
+        </div>
     </div>
 </footer>

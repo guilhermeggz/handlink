@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, DecimalField, SubmitField, MultipleFileField, SelectField, SelectMultipleField, widgets
+from wtforms import FileField, StringField, TextAreaField, DecimalField, SubmitField, SelectField, SelectMultipleField, widgets
 from wtforms.validators import DataRequired, Length, ValidationError, NumberRange
 from flask_wtf.file import FileAllowed
 
@@ -52,8 +52,8 @@ class AnunciarServicoForm(FlaskForm):
         ],
         places=2,
     )
-    photo = MultipleFileField(
-        "Fotos do seu serviço (opcional)",
+    photo = FileField(
+        "Foto do seu serviço (opcional)",
         validators=[
             FileAllowed(["jpg", "jpeg", "png"], "Apenas imagens nos formatos JPG ou PNG são permitidas!"),
         ],

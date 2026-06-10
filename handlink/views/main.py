@@ -9,3 +9,11 @@ def index():
     return render_template(
         'main/index.html'
     )
+
+@bp_main.route('/sobre-o-handlink')
+def about():
+    current_app.logger.debug('renderizando about html dinamicamente')
+
+    return render_template(
+        'main/about.html'
+    )

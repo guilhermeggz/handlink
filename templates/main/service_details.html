@@ -24,7 +24,7 @@
                     
                     <div class="flex-shrink-0">
                         {% if service.photo %}
-                            <img src="/static/uploads/{{ service.photo }}" alt="{{ service.name }}" class="img-thumbnail rounded shadow-sm object-fit-cover" style="width: 200px; height: 200px;">
+                            <img src="{{ url_for('static', filename='uploads/' + service.photo) }}" alt="{{ service.name }}" class="img-thumbnail rounded shadow-sm object-fit-cover" style="width: 300px; height: 300;">
                         {% else %}
                             <div class="bg-light border rounded d-flex flex-column align-items-center justify-content-center text-muted shadow-sm" style="width: 200px; height: 200px;">
                                 <i class="fa-solid fa-image fs-1 mb-2 opacity-25"></i>

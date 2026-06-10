@@ -1,3 +1,5 @@
+import os
+import secrets
 from datetime import datetime, timedelta
 from types import SimpleNamespace
 
@@ -25,6 +27,16 @@ FALLBACK_CATEGORIES = {
     6: "Frete",
 }
 
+def save_uploaded_photo(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+
+    picture_path = os.path.join(current_app.root_path, 'static/uploads', picture_fn)
+
+    form_picture.save(picture_path)
+
+    return picture_fn
 
 def set_service_form_choices(form):
     categories = (
@@ -190,6 +202,14 @@ def anunciar_servico():
         flash('Cadastre ao menos uma categoria e uma cidade antes de anunciar um serviço.', 'warning')
 
     if form.validate_on_submit():
+        if form.photo.data:
+            try:
+                photo_filename = save_uploaded_photo(form.photo.data)
+            except Exception as e:
+                current_app.logger.error(f"Erro ao salvar foto do serviço: {e}")
+                flash('Houve um erro ao processar a foto. Tente novamente.', 'danger')
+                return render_template('main/create_service.html', form=form)
+            
         service = Service(
             provider_id=current_user.id,
             category_id=form.category_id.data,
@@ -198,6 +218,7 @@ def anunciar_servico():
             desc=form.description.data,
             price=form.price_per_hour.data,
             is_active=True,
+            photo=photo_filename if 'photo_filename' in locals() else None
         )
 
         db.session.add(service)

@@ -1,1 +1,49 @@
-<p class="mb-0 text-white-50">&copy; 2026 UVV - Vila Velha, ES | Todos os direitos reservados.</p>
+<footer class="bg-dark text-white py-5 mt-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-12 col-md-4">
+                <h3 class="h5 fw-bold text-white mb-2">HandLink</h3>
+                <p class="mb-0 text-white-50 small">Conectando você à melhor mão de obra local com segurança e praticidade.</p>
+            </div>
+
+            <div class="col-6 col-md-4">
+                <h4 class="h6 fw-bold text-white mb-3">Serviços Disponíveis</h4>
+                <ul class="list-unstyled mb-0">
+                    {% for cat in categorias_banco %}
+                        <li class="mb-2">
+                            <a href="{{ url_for('main.index', categoria=cat.id) }}" class="text-white-50 text-decoration-none link-light small">
+                                {{ cat.name }}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="text-white-50 small fst-italic">Nenhuma categoria cadastrada.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="col-6 col-md-4">
+                <h4 class="h6 fw-bold text-white mb-3">Institucional</h4>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <a href="{{ url_for('main.about') }}" class="text-white-50 text-decoration-none link-light small">Sobre o HandLink</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{{ url_for('services.painel_prestador') }}" class="text-white-50 text-decoration-none link-light small">Oferecer um serviço</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="mailto:suporte@handlink.com.br?subject=Suporte%20-%20HandLink" class="text-white-50 text-decoration-none link-light small">
+                            <i class="fa-regular fa-envelope me-1"></i> Entrar em contato
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="border-secondary my-4 opacity-25">
+
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-white-50 small">
+            <p class="mb-0 text-center text-sm-start">&copy; 2026 UVV - Vila Velha, ES | Todos os direitos reservados.</p>
+            <p class="mb-0 text-center text-sm-end mt-2 mt-sm-0">Desenvolvido para conectar talentos.</p>
+        </div>
+    </div>
+</footer>

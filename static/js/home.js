@@ -36,16 +36,18 @@ window.HandLinkHome = (() => {
 
     function init() {
         loadCategories();
-        loadTrendingServices({ reset: true });
+        
+        if (document.getElementById("services-container")) {
+            loadTrendingServices({ reset: true });
+        }
+        
         bindSearchForm();
         bindLoadMoreButton();
     }
 
     function bindSearchForm() {
         const searchForm = document.getElementById("search-form");
-        if (!searchForm) {
-            return;
-        }
+        if (!searchForm) return;
 
         searchForm.addEventListener("submit", async (event) => {
             event.preventDefault();
@@ -55,9 +57,7 @@ window.HandLinkHome = (() => {
 
     function bindLoadMoreButton() {
         const button = document.getElementById("load-more-services");
-        if (!button) {
-            return;
-        }
+        if (!button) return;
 
         button.addEventListener("click", async () => {
             if (isSearchMode) {
@@ -75,10 +75,10 @@ window.HandLinkHome = (() => {
     }
 
     async function loadCategories() {
-        const container = document.getElementById("categories-container");
-        if (!container) {
-            return;
-        }
+        const mainContainer = document.getElementById("categories-container");
+        const footerContainer = document.getElementById("categories-footer-container");
+        
+        if (!mainContainer && !footerContainer) return;
 
         try {
             const response = await fetch("/api/categorias");
@@ -95,13 +95,20 @@ window.HandLinkHome = (() => {
             }));
 
             renderCategories(categories.length ? categories : fallbackCategories);
+            renderCategoriesFooter(categories.length ? categories : fallbackCategories);
         } catch (error) {
+            console.error("Erro ao carregar categorias:", error);
+
             renderCategories(fallbackCategories);
+            renderCategoriesFooter(fallbackCategories);
         }
     }
 
     function renderCategories(categories) {
         const container = document.getElementById("categories-container");
+
+        if (!container) return;
+
         container.innerHTML = "";
 
         categories.forEach((category) => {
@@ -120,6 +127,31 @@ window.HandLinkHome = (() => {
             container.appendChild(col);
         });
     }
+
+    function renderCategoriesFooter(categories) {
+        const container = document.getElementById("categories-footer-container");
+        
+        if (!container) return; 
+        
+        container.innerHTML = "";
+
+        if (categories.length === 0) {
+            container.innerHTML = `<li class="text-white-50 small fst-italic">Nenhuma categoria cadastrada.</li>`;
+            return;
+        }
+
+        categories.forEach((category) => {
+            const li = document.createElement("li");
+            li.className = "mb-2";
+            li.innerHTML = `
+                <a href="/servicos/categoria/${category.id}" class="text-white-50 text-decoration-none link-light small">
+                    ${escapeHtml(category.nome)}
+                </a>
+            `;
+            container.appendChild(li);
+        });
+    }
+
 
     function getCategoryIcon(categoryName) {
         const normalizedName = normalizeCategory(categoryName);

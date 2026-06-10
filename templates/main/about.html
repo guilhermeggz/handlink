@@ -1,0 +1,97 @@
+{% extends "main/base.html" %}
+
+{% block title %}HandLink - Sobre Nós{% endblock %}
+
+{% block content %}
+<header class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Conectando histórias e valorizando o trabalho local</h1>
+        <p class="lead mb-4">Saiba como o HandLink está transformando a forma de contratar e oferecer serviços.</p>
+    </div>
+</header>
+
+<section class="py-5 bg-white" id="propósito">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-12 col-md-6">
+                <h2 class="fw-bold mb-4">O que é o HandLink?</h2>
+                <p class="text-muted lh-lg mb-3">
+                    O <strong>HandLink</strong> nasceu com a missão de resolver um problema comum no dia a dia de muitas pessoas: encontrar profissionais qualificados e de confiança para resolver reparos, manutenções ou projetos de forma rápida e descomplicada.
+                </p>
+                <p class="text-muted lh-lg mb-0">
+                    Removemos as barreiras das indicações informais e criamos um ambiente seguro, transparente e direto. Aqui, o profissional autônomo ganha uma vitrine digital justa para expandir seus negócios, enquanto os clientes encontram a solução exata para suas necessidades em poucos minutos.
+                </p>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="card bg-light border-0 p-4 p-lg-5 text-center shadow-sm">
+                    <div class="mb-3 text-primary fs-1">
+                        <i class="fa-solid fa-handshake"></i>
+                    </div>
+                    <h3 class="h4 fw-bold text-dark mb-2">Nosso Compromisso</h3>
+                    <p class="text-muted small mb-0">
+                        Fortalecer a comunidade local de Vila Velha e arredores, impulsionando a economia local por meio de conexões tecnológicas simplificadas, seguras e eficientes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 how-it-works-section" id="valores">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-2">Nossos Pilares</h2>
+            <p class="text-muted mb-0">Os valores fundamentais que sustentam a nossa plataforma</p>
+        </div>
+
+        <div class="how-it-works-grid">
+            <div class="how-step-card">
+                <div class="how-step-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <span class="how-step-number">01</span>
+                <h3>Segurança</h3>
+                <p>Implementamos regras estruturais e travas inteligentes para que todas as partes operem com total tranquilidade.</p>
+            </div>
+
+            <div class="how-step-card">
+                <div class="how-step-icon">
+                    <i class="fa-solid fa-eye"></i>
+                </div>
+                <span class="how-step-number">02</span>
+                <h3>Transparência</h3>
+                <p>Informações de preços estimados, contato e escopo dos serviços sempre visíveis e acessíveis, sem taxas ocultas.</p>
+            </div>
+
+            <div class="how-step-card">
+                <div class="how-step-icon">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <span class="how-step-number">03</span>
+                <h3>Praticidade</h3>
+                <p>Navegação fluida e fluxos ágeis desenvolvidos especificamente para otimizar o seu tempo e simplificar sua rotina.</p>
+            </div>
+
+            <div class="how-step-card">
+                <div class="how-step-icon">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <span class="how-step-number">04</span>
+                <h3>Comunidade</h3>
+                <p>Valorização genuína do prestador de serviço regional, gerando oportunidades reais de crescimento profissional.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-white text-center" id="cta-sobre">
+    <div class="container py-3">
+        <h2 class="fw-bold mb-3">Pronto para fazer parte dessa rede?</h2>
+        <p class="text-muted mb-4 mx-auto" style="max-width: 600px;">Seja você um cliente procurando ajuda ou um profissional querendo expandir sua carteira de clientes, o HandLink é o seu lugar.</p>
+        <div class="d-flex gap-2 justify-content-center flex-wrap">
+            <a href="#categorias" class="btn btn-primary px-4 py-2 fw-semibold">Explorar Serviços</a>
+            <a href="{{ url_for('services.anunciar_servico') }}" class="btn btn-dark px-4 py-2 fw-semibold">Anunciar um Serviço</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
