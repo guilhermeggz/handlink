@@ -61,7 +61,7 @@ def services_by_category(category_id):
     if not category and category_id in FALLBACK_CATEGORIES:
         category = SimpleNamespace(id=category_id, name=FALLBACK_CATEGORIES[category_id])
         return render_template(
-            'main/services.html',
+            'main/service/services.html',
             category=category,
             services=[],
         )
@@ -78,7 +78,7 @@ def services_by_category(category_id):
     )
 
     return render_template(
-        'main/services.html',
+        'main/service/services.html',
         category=category,
         services=services,
     )
@@ -227,7 +227,7 @@ def anunciar_servico():
         flash('Serviço anunciado com sucesso!', 'success')
         return redirect(url_for('services.services_by_category', category_id=service.category_id))
 
-    return render_template('main/create_service.html', form=form)
+    return render_template('main/service/create_service.html', form=form)
 
 @bp_services.route('/seja_prestador', methods=['GET', 'POST'])
 def seja_prestador():
@@ -288,7 +288,7 @@ def seja_prestador():
         flash('Sua solicitação para ser prestador foi enviada com sucesso e está em análise!', 'success')
         return redirect(url_for('main.index'))
     
-    return render_template('main/be_a_provider.html', form=form)
+    return render_template('main/service/be_a_provider.html', form=form)
 
 @bp_services.route('/servicos/detalhes/<int:service_id>')
 def detalhes_servico(service_id):
@@ -296,7 +296,7 @@ def detalhes_servico(service_id):
     service = Service.query.get_or_404(service_id)
     
     return render_template(
-        'main/service_details.html', 
+        'main/service/service_details.html', 
         service=service
     )
 
@@ -319,7 +319,7 @@ def agendar_servico(service_id):
         
         if data_escolhida < tempo_minimo:
             flash('Por favor, escolha um horário com no mínimo 3 horas de antecedência.', 'warning')
-            return render_template('main/request_appointment.html', form=form, service=service)
+            return render_template('main/appointment/request_appointment.html', form=form, service=service)
         
         appointment = Appointment(
             client_id=current_user.id,
@@ -336,7 +336,7 @@ def agendar_servico(service_id):
         flash('Solicitação de agendamento enviada!', 'success')
         return redirect(url_for('services.meus_agendamentos'))
         
-    return render_template('main/request_appointment.html', form=form, service=service)
+    return render_template('main/appointment/request_appointment.html', form=form, service=service)
 
 
 # ==========================================
@@ -382,7 +382,7 @@ def painel_prestador():
         .order_by(Appointment.appointment_time.asc())
         .all()
     )
-    return render_template('main/provider_panel.html', agendamentos=agendamentos, form=form)
+    return render_template('main/provider/provider_panel.html', agendamentos=agendamentos, form=form)
 
 
 # ==========================================
@@ -411,7 +411,7 @@ def meus_agendamentos():
         return redirect(url_for('services.meus_agendamentos'))
 
     agendamentos = Appointment.query.filter_by(client_id=current_user.id).order_by(Appointment.appointment_time.desc()).all()
-    return render_template('main/my_appointments.html', agendamentos=agendamentos, form=form)
+    return render_template('main/appointment/my_appointments.html', agendamentos=agendamentos, form=form)
 
 
 
