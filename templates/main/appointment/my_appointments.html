@@ -40,7 +40,7 @@
                                     <i class="fa-solid fa-pen-to-square"></i> Alterar
                                 </button>
                                 
-                                <form action="{{ url_for('services.meus_agendamentos') }}" method="POST" class="d-inline" onsubmit="return confirm('Confirmar cancelamento?');">
+                                <form action="{{ url_for('appointments.meus_agendamentos') }}" method="POST" class="d-inline" onsubmit="return confirm('Confirmar cancelamento?');">
                                     {{ form.csrf_token }}
                                     <input type="hidden" name="appointment_id" value="{{ a.id }}">
                                     <button type="submit" class="btn btn-sm btn-outline-danger">
@@ -55,7 +55,7 @@
                                                 <h5 class="modal-title fw-bold">Modificar Agendamento</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
-                                            <form action="{{ url_for('services.alterar_agendamento_cliente', id=a.id) }}" method="POST">
+                                            <form action="{{ url_for('appointments.alterar_agendamento_cliente', id=a.id) }}" method="POST">
                                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                                 <div class="modal-body text-start p-4">
                                                     <div class="mb-3">

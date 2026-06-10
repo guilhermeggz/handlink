@@ -2,6 +2,7 @@ from handlink.views.main import bp_main
 from handlink.views.auth import bp_auth
 from handlink.views.user import bp_user
 from handlink.views.services import bp_services
+from handlink.views.appointments import bp_appointments
 
 def init_app(app):
     """
@@ -18,3 +19,6 @@ def init_app(app):
 
     app.register_blueprint(bp_auth)
     app.logger.info("Blueprint 'auth' registrado com sucesso")
+
+    app.register_blueprint(bp_appointments)
+    app.logger.info("Blueprint 'appointments' registrado com sucesso")

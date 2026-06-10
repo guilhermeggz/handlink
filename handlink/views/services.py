@@ -4,12 +4,10 @@ from datetime import datetime, timedelta
 from types import SimpleNamespace
 
 from flask import Blueprint, abort, current_app, flash, jsonify, redirect, render_template, request, url_for
-from flask_login import login_required, current_user
-from flask_wtf import FlaskForm
+from flask_login import current_user
 
 from handlink.forms.services import AnunciarServicoForm, CadastrarPrestadorForm
-# Importando os novos forms criados
-from handlink.forms.appointments import AgendarServicoForm, ProviderAppointmentActionForm, ClientAppointmentActionForm
+from handlink.forms.appointments import AgendarServicoForm
 
 from handlink.ext.db import db
 from handlink.models import Category, City, Role, RoleUser, Service, Appointment
@@ -39,12 +37,7 @@ def save_uploaded_photo(form_picture):
     return picture_fn
 
 def set_service_form_choices(form):
-    categories = (
-        Category.query
-        .filter(Category.status == True)
-        .order_by(Category.name.asc())
-        .all()
-    )
+    categories = current_user.worked_categories
     cities = City.query.order_by(City.name.asc()).all()
 
     form.category_id.choices = [(category.id, category.name) for category in categories]
@@ -176,7 +169,7 @@ def anunciar_servico():
         flash('Faça login ou cadastre-se rapidinho para anunciar seu serviço.', 'info')
         return redirect(url_for('auth.login', next=request.path))
     
-    provider_status = current_user.provider_status()
+    provider_status = current_user.provider_status
     current_app.logger.debug(f"Status do usuário {current_user.email} como provider: {provider_status}")
     
     match provider_status:
@@ -240,7 +233,7 @@ def seja_prestador():
     categorias_do_banco = Category.query.filter_by(status=True).all()
     form.categories.choices = [(c.id, c.name) for c in categorias_do_banco]
 
-    provider_status = current_user.provider_status()
+    provider_status = current_user.provider_status
     current_app.logger.debug(f"Status do usuário {current_user.email} como provider: {provider_status}")
 
     match provider_status:
@@ -280,7 +273,7 @@ def seja_prestador():
         nova_associacao = RoleUser(
             user=current_user,
             role=provider_role,
-            provider_status=ProviderStatus.APROVADO
+            provider_status=ProviderStatus.PENDENTE
         )
         db.session.add(nova_associacao)
         db.session.commit()
@@ -288,7 +281,7 @@ def seja_prestador():
         flash('Sua solicitação para ser prestador foi enviada com sucesso e está em análise!', 'success')
         return redirect(url_for('main.index'))
     
-    return render_template('main/service/be_a_provider.html', form=form)
+    return render_template('main/provider/be_a_provider.html', form=form)
 
 @bp_services.route('/servicos/detalhes/<int:service_id>')
 def detalhes_servico(service_id):
@@ -334,115 +327,6 @@ def agendar_servico(service_id):
         db.session.commit()
         
         flash('Solicitação de agendamento enviada!', 'success')
-        return redirect(url_for('services.meus_agendamentos'))
+        return redirect(url_for('appointments.meus_agendamentos'))
         
     return render_template('main/appointment/request_appointment.html', form=form, service=service)
-
-
-# ==========================================
-# PAINEL DO PROVIDER (Gerenciar Meus Serviços Solicitados)
-# ==========================================
-
-@bp_services.route('/painel-prestador', methods=['GET', 'POST'])
-@login_required
-def painel_prestador():
-    # Segurança: Garante que ele possui perfil ou role de provider ativo
-    if not any(assoc.role.name == 'provider' and assoc.provider_status == ProviderStatus.APROVADO for assoc in current_user.role_associations):
-        flash('Acesso restrito a prestadores aprovados.', 'warning')
-        return redirect(url_for('main.index'))
-
-    form = ProviderAppointmentActionForm()
-
-    # Processa o formulário de atualização de status via POST
-    if form.validate_on_submit():
-        appointment = Appointment.query.get_or_404(form.appointment_id.data)
-        
-        # Segurança: Garante que o agendamento é para um serviço deste provedor
-        if appointment.service.provider_id != current_user.id:
-            abort(403)
-            
-        # O validate_on_submit já garante que form.status.data é uma opção válida do SelectField
-        novo_status = form.status.data 
-
-        appointment.status = novo_status
-        db.session.commit()
-        flash(f'Agendamento atualizado para {novo_status} com sucesso!', 'success')
-            
-        return redirect(url_for('services.painel_prestador'))
-    
-    # Exibe erros de validação, se houver, de forma sutil
-    elif form.errors:
-        flash('Erro ao atualizar agendamento. Verifique os dados.', 'danger')
-
-    # Processa a listagem via GET
-    agendamentos = (
-        Appointment.query
-        .join(Service)
-        .filter(Service.provider_id == current_user.id)
-        .order_by(Appointment.appointment_time.asc())
-        .all()
-    )
-    return render_template('main/provider/provider_panel.html', agendamentos=agendamentos, form=form)
-
-
-# ==========================================
-# PAINEL DO CLIENTE (Meus Agendamentos)
-# ==========================================
-# (As rotas do cliente já estavam praticamente corretas, apenas mantive o padrão)
-
-@bp_services.route('/meus-agendamentos', methods=['GET', 'POST'])
-@login_required
-def meus_agendamentos():
-    form = ClientAppointmentActionForm()
-    
-    if form.validate_on_submit():
-        appointment = Appointment.query.get_or_404(form.appointment_id.data)
-        
-        if appointment.client_id != current_user.id:
-            abort(403)
-            
-        if appointment.pode_modificar:
-            appointment.status = 'Cancelado'
-            db.session.commit()
-            flash('Agendamento cancelado com sucesso.', 'success')
-        else:
-            flash('Não é possível cancelar com menos de 3 dias de antecedência.', 'danger')
-            
-        return redirect(url_for('services.meus_agendamentos'))
-
-    agendamentos = Appointment.query.filter_by(client_id=current_user.id).order_by(Appointment.appointment_time.desc()).all()
-    return render_template('main/appointment/my_appointments.html', agendamentos=agendamentos, form=form)
-
-
-
-@bp_services.route('/agendamento/<int:id>/alterar', methods=['POST'])
-@login_required
-def alterar_agendamento_cliente(id):
-    appointment = Appointment.query.get_or_404(id)
-    if appointment.client_id != current_user.id:
-        abort(403)
-        
-    if not appointment.pode_modificar:
-        flash('Não é possível alterar dados com menos de 3 dias de antecedência.', 'danger')
-        return redirect(url_for('services.meus_agendamentos'))
-        
-    nova_data_str = request.form.get('appointment_time')
-    novas_horas = request.form.get('hours')
-    
-    if nova_data_str:
-        nova_data = datetime.strptime(nova_data_str, '%Y-%m-%dT%H:%M')
-        
-        tempo_minimo = datetime.now() + timedelta(hours=3)
-        
-        if nova_data < tempo_minimo:
-            flash('O agendamento precisa ser marcado com pelo menos 3 horas de antecedência.', 'warning')
-            return redirect(url_for('services.meus_agendamentos'))
-            
-        appointment.appointment_time = nova_data
-
-    if novas_horas:
-        appointment.hours = int(novas_horas)
-        
-    db.session.commit()
-    flash('Agendamento atualizado com sucesso!', 'success')
-    return redirect(url_for('services.meus_agendamentos'))

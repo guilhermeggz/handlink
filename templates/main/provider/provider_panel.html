@@ -39,7 +39,7 @@
                         <td class="text-end">
                             <div class="d-inline-flex gap-1">
                                 {% if a.status == 'Pendente' %}
-                                    <form action="{{ url_for('services.painel_prestador') }}" method="POST">
+                                    <form action="{{ url_for('appointments.painel_prestador') }}" method="POST">
                                         {{ form.csrf_token }}
                                         <input type="hidden" name="appointment_id" value="{{ a.id }}">
                                         <input type="hidden" name="status" value="Confirmado">
@@ -48,7 +48,7 @@
                                         </button>
                                     </form>
                                     
-                                    <form action="{{ url_for('services.painel_prestador') }}" method="POST" onsubmit="return confirm('Recusar e cancelar este serviço?');">
+                                    <form action="{{ url_for('appointments.painel_prestador') }}" method="POST" onsubmit="return confirm('Recusar e cancelar este serviço?');">
                                         {{ form.csrf_token }}
                                         <input type="hidden" name="appointment_id" value="{{ a.id }}">
                                         <input type="hidden" name="status" value="Cancelado">
@@ -58,7 +58,7 @@
                                     </form>
                                 
                                 {% elif a.status == 'Confirmado' %}
-                                    <form action="{{ url_for('services.painel_prestador') }}" method="POST">
+                                    <form action="{{ url_for('appointments.painel_prestador') }}" method="POST">
                                         {{ form.csrf_token }}
                                         <input type="hidden" name="appointment_id" value="{{ a.id }}">
                                         <input type="hidden" name="status" value="Finalizado">
@@ -67,7 +67,7 @@
                                         </button>
                                     </form>
                                     
-                                    <form action="{{ url_for('services.painel_prestador') }}" method="POST" onsubmit="return confirm('Deseja cancelar este serviço já confirmado?');">
+                                    <form action="{{ url_for('appointments.painel_prestador') }}" method="POST" onsubmit="return confirm('Deseja cancelar este serviço já confirmado?');">
                                         {{ form.csrf_token }}
                                         <input type="hidden" name="appointment_id" value="{{ a.id }}">
                                         <input type="hidden" name="status" value="Cancelado">

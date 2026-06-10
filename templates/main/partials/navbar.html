@@ -57,16 +57,16 @@
                             <li><h6 class="dropdown-header text-uppercase tracking-wider small opacity-75">Minha Conta</h6></li>
                             
                             <li>
-                                <a class="dropdown-item py-2 rounded d-flex align-items-center {% if request.endpoint == 'services.meus_agendamentos' %}active{% endif %}" href="{{ url_for('services.meus_agendamentos') }}">
+                                <a class="dropdown-item py-2 rounded d-flex align-items-center {% if request.endpoint == 'appointments.meus_agendamentos' %}active{% endif %}" href="{{ url_for('appointments.meus_agendamentos') }}">
                                     <i class="fa-solid fa-calendar-days text-muted me-2" style="width: 20px;"></i> Meus Agendamentos
                                 </a>
                             </li>
                             
-                            {% if current_user.provider_status and current_user.provider_status().name == 'APROVADO' %}
+                            {% if current_user.provider_status and current_user.provider_status.name == 'APROVADO' %}
                                 <li><hr class="dropdown-divider opacity-25"></li>
                                 <li><h6 class="dropdown-header text-uppercase tracking-wider small text-success opacity-75">Profissional</h6></li>
                                 <li>
-                                    <a class="dropdown-item py-2 rounded text-success fw-medium d-flex align-items-center {% if request.endpoint == 'services.painel_prestador' %}active{% endif %}" href="{{ url_for('services.painel_prestador') }}">
+                                    <a class="dropdown-item py-2 rounded text-success fw-medium d-flex align-items-center {% if request.endpoint == 'appointments.painel_prestador' %}active{% endif %}" href="{{ url_for('appointments.painel_prestador') }}">
                                         <i class="fa-solid fa-briefcase me-2" style="width: 20px;"></i> Painel do Prestador
                                     </a>
                                 </li>

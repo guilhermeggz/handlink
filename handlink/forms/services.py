@@ -19,10 +19,10 @@ class CadastrarPrestadorForm(FlaskForm):
     
     categories = SelectMultipleField(
         'Em quais categorias você trabalha?',
-        coerce=int,  # Garante que o ID da categoria seja tratado como número inteiro
+        coerce=int,
         validators=[DataRequired(message="Selecione ao menos uma categoria para continuar.")],
-        widget=widgets.ListWidget(prefix_label=False), # Organiza em lista
-        option_widget=widgets.CheckboxInput()          # Transforma cada opção em um checkbox
+        widget=widgets.ListWidget(prefix_label=False),
+        option_widget=widgets.CheckboxInput()
     )
 
 class AnunciarServicoForm(FlaskForm):

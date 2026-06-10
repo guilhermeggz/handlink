@@ -7,7 +7,7 @@ from handlink.ext.db import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from handlink.models.role_user import ProviderStatus, RoleUser
+from handlink.models.role_user import RoleUser, ProviderStatus
 from handlink.models.role import Role
 
 if TYPE_CHECKING:
@@ -100,7 +100,8 @@ class User(UserMixin, db.Model):
 
 # 1. Comportamento em Python (Objetos instanciados em memória)
     @hybrid_property
-    def provider_status(self):
+    def provider_status(self) -> Optional[str]:
+        """Busca o status do usuário na associação de provider (em memória)."""
         if self.role_associations:
             for assoc in self.role_associations:
                 if assoc.role and assoc.role.name == 'provider':
