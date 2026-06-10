@@ -113,17 +113,21 @@ def anunciar_servico():
     provider_status = current_user.provider_status()
     current_app.logger.debug(f"Status do usuário {current_user.email} como provider: {provider_status}")
     
-    if provider_status == None:
-        flash('Cadastre-se como prestador para anunciar seus serviços.', 'warning')
-        return redirect(url_for('services.seja_prestador'))
-    
-    elif provider_status == ProviderStatus.PENDENTE:
-        flash('Sua solicitação de prestador está pendente. Aguarde a aprovação para anunciar seus serviços.', 'info')
-        return redirect(url_for('main.index'))
-    
-    elif provider_status == ProviderStatus.REPROVADO:
-        flash('Sua solicitação de prestador foi reprovada. Entre em contato para mais informações.', 'danger')
-        return redirect(url_for('main.index'))
+    match provider_status:
+        case ProviderStatus.PENDENTE:
+            flash('Sua solicitação de prestador está pendente. Aguarde a aprovação.', 'info')
+            return redirect(url_for('main.index'))
+            
+        case ProviderStatus.APROVADO:
+            pass
+        
+        case ProviderStatus.REPROVADO:
+            flash('Sua solicitação de prestador foi reprovada. Entre em contato para mais informações.', 'danger')
+            return redirect(url_for('main.index'))
+
+        case _:
+            flash('Cadastre-se como prestador para anunciar seus serviços.', 'warning')
+            return redirect(url_for('services.seja_prestador'))
 
     form = AnunciarServicoForm()
 
