@@ -228,7 +228,7 @@ function mapApiService(service) {
         avaliacao: "Novo",
         imagem: categoryImages[categoryKey] || categoryImages.default,
         preco: price,
-        detalhesUrl: service.categoria_id ? `/servicos/categoria/${service.categoria_id}` : "/login",
+        detalhesUrl: service.id ? `/servicos/detalhes/${service.id}` : "/login",
     };
 }
 
@@ -274,7 +274,7 @@ function appendServices(services, emptyMessage = "Nenhum serviço disponível no
                         </span>
                     </div>
                 </div>
-                <div class="card-footer bg-white border-top-0 pb-3" href="{{ url_for('services.detalhes_servico', service_id=service.id) }}">
+                <div class="card-footer bg-white border-top-0 pb-3">
                     <a class="btn btn-outline-primary w-100" href="${service.detalhesUrl}">Ver detalhes</a>
                 </div>
             </div>
