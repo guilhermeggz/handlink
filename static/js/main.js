@@ -50,15 +50,21 @@ const fallbackServices = [
 document.addEventListener("DOMContentLoaded", () => {
     loadCategories();
     renderServices(fallbackServices);
-
-    const searchForm = document.getElementById("search-form");
-    if (searchForm) {
-        searchForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
-            await searchServices();
-        });
-    }
+    bindSearchForm();
+    animateFlashMessages();
 });
+
+function bindSearchForm() {
+    const searchForm = document.getElementById("search-form");
+    if (!searchForm) {
+        return;
+    }
+
+    searchForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        await searchServices();
+    });
+}
 
 async function loadCategories() {
     const container = document.getElementById("categories-container");
@@ -191,26 +197,26 @@ function renderServices(services, emptyMessage = "Nenhum serviço disponível no
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const flashMessages = document.querySelectorAll('.alert');
-    
-    flashMessages.forEach(function(alert) {
-        const progressBar = alert.querySelector('.flash-progress-bar');
-        
+function animateFlashMessages() {
+    const flashMessages = document.querySelectorAll(".alert");
+
+    flashMessages.forEach((alert) => {
+        const progressBar = alert.querySelector(".flash-progress-bar");
+
         if (progressBar) {
-            setTimeout(function() {
-                progressBar.style.transition = 'width 3s linear';
-                progressBar.style.width = '0%';
+            setTimeout(() => {
+                progressBar.style.transition = "width 3s linear";
+                progressBar.style.width = "0%";
             }, 50);
         }
 
-        setTimeout(function() {
-            alert.classList.remove('show');
-            
-            setTimeout(function() {
+        setTimeout(() => {
+            alert.classList.remove("show");
+
+            setTimeout(() => {
                 const parentContainer = alert.parentElement;
                 alert.remove();
-                
+
                 if (parentContainer && parentContainer.children.length === 0) {
                     parentContainer.remove();
                 }
@@ -218,4 +224,4 @@ document.addEventListener('DOMContentLoaded', function() {
             
         }, 3500);
     });
-});
+}

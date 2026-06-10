@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectMultipleField, StringField, TextAreaField, DecimalField, SubmitField, FileField, widgets
-from wtforms.validators import DataRequired, NumberRange, ValidationError, Length
+from wtforms import StringField, TextAreaField, DecimalField, SubmitField, MultipleFileField, SelectField, SelectMultipleField, widgets
+from wtforms.validators import DataRequired, Length, ValidationError, NumberRange
 from flask_wtf.file import FileAllowed
 
 def apenas_numeros(form, field):
@@ -25,28 +25,37 @@ class CadastrarPrestadorForm(FlaskForm):
         option_widget=widgets.CheckboxInput()          # Transforma cada opção em um checkbox
     )
 
-
 class AnunciarServicoForm(FlaskForm):
+    category_id = SelectField(
+        "Categoria",
+        coerce=int,
+        validators=[DataRequired(message="Selecione uma categoria.")],
+    )
+    city_id = SelectField(
+        "Cidade de atendimento",
+        coerce=int,
+        validators=[DataRequired(message="Selecione uma cidade.")],
+    )
     name = StringField(
-        'Nome do Serviço', 
-        validators=[DataRequired(message="Dê um título ao seu serviço. Ex: Eletricista Residencial")]
+        "Nome do serviço",
+        validators=[DataRequired(message="Dê um título ao seu serviço. Ex: Eletricista residencial")],
     )
     description = TextAreaField(
-        'Descrição Completa', 
-        validators=[DataRequired(message="Explique detalhadamente o que você faz.")]
+        "Descrição completa",
+        validators=[DataRequired(message="Explique detalhadamente o que você faz.")],
     )
     price_per_hour = DecimalField(
-        'Valor por Hora (R$)', 
+        "Valor por hora (R$)",
         validators=[
             DataRequired(message="Insira o seu valor por hora."),
-            NumberRange(min=1.0, message="O valor deve ser maior que R$ 1,00.")
+            NumberRange(min=1.0, message="O valor deve ser maior que R$ 1,00."),
         ],
-        places=2
+        places=2,
     )
-    photo = FileField(
-        'Fotos do seu Serviço (Opcional)',
+    photos = MultipleFileField(
+        "Fotos do seu serviço (opcional)",
         validators=[
-            FileAllowed(['jpg', 'jpeg', 'png'], 'Apenas imagens nos formatos JPG ou PNG são permitidas!')
-        ]
+            FileAllowed(["jpg", "jpeg", "png"], "Apenas imagens nos formatos JPG ou PNG são permitidas!"),
+        ],
     )
-    submit = SubmitField('Publicar Anúncio')
+    submit = SubmitField("Publicar anúncio")

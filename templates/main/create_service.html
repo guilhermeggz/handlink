@@ -1,53 +1,71 @@
 {% extends "main/base.html" %}
 
-{% block title %}Anunciar Serviço | HandLink{% endblock %}
+{% block title %}Anunciar serviço | HandLink{% endblock %}
 
 {% block content %}
 <script src="/static/js/services.js"></script>
 
-
-<div class="row justify-content-center my-5">
-    <div class="col-lg-8">
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-4 p-md-5">
-                <div class="mb-4">
-                    <h2 class="h3 fw-bold text-primary mb-2">
-                        <i class="fa-solid fa-circle-plus me-2"></i>Anunciar um Serviço
-                    </h2>
-                    <p class="text-muted mb-0">Preencha as informações abaixo para começar a receber propostas de clientes.</p>
-                </div>
-
-                <form method="POST" action="{{ url_for('services.anunciar_servico') }}" enctype="multipart/form-data" novalidate>
-                    {{ form.hidden_tag() }}
-
-                    <div class="mb-3">
-                        {{ form.name.label(class="form-label fw-semibold") }}
-                        {{ form.name(class="form-control is-invalid" if form.name.errors else "form-control", placeholder="Ex: Pintor Profissional, Conserto de Ar Condicionado...") }}
-                        {% for error in form.name.errors %}
-                            <div class="invalid-feedback">{{ error }}</div>
-                        {% endfor %}
+<div class="container">
+    <div class="row justify-content-center my-5">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-md-5">
+                    <div class="mb-4">
+                        <h2 class="h3 fw-bold text-primary mb-2">
+                            <i class="fa-solid fa-circle-plus me-2"></i>Anunciar um Serviço
+                        </h2>
+                        <p class="text-muted mb-0">Preencha as informações abaixo para começar a receber propostas de clientes.</p>
                     </div>
 
-                    <div class="mb-3">
-                        {{ form.price_per_hour.label(class="form-label fw-semibold") }}
-                        <div class="input-group">
-                            <span class="input-group-text">R$</span>
-                            {{ form.price_per_hour(class="form-control is-invalid" if form.price_per_hour.errors else "form-control", placeholder="0,00", type="number", step="0.01") }}
-                            <span class="input-group-text">/ hora</span>
-                            {% for error in form.price_per_hour.errors %}
-                                <div class="invalid-feedback d-block">{{ error }}</div>
-                            {% endfor %}
-                        </div>
-                        <div class="form-text">Defina um preço justo por hora de trabalho estimado.</div>
-                    </div>
+                        <form method="POST" action="{{ url_for('services.anunciar_servico') }}" enctype="multipart/form-data" novalidate>
+                            {{ form.hidden_tag() }}
 
-                    <div class="mb-3">
-                        {{ form.description.label(class="form-label fw-semibold") }}
-                        {{ form.description(class="form-control is-invalid" if form.description.errors else "form-control", rows="5", placeholder="Descreva suas habilidades, ferramentas que utiliza, sua experiência e região que atende...") }}
-                        {% for error in form.description.errors %}
-                            <div class="invalid-feedback">{{ error }}</div>
-                        {% endfor %}
-                    </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.category_id.label(class="form-label fw-semibold") }}
+                                    {{ form.category_id(class="form-select is-invalid" if form.category_id.errors else "form-select") }}
+                                    {% for error in form.category_id.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    {{ form.city_id.label(class="form-label fw-semibold") }}
+                                    {{ form.city_id(class="form-select is-invalid" if form.city_id.errors else "form-select") }}
+                                    {% for error in form.city_id.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form.name.label(class="form-label fw-semibold") }}
+                                {{ form.name(class="form-control is-invalid" if form.name.errors else "form-control", placeholder="Ex: Pintor profissional, conserto de ar-condicionado...") }}
+                                {% for error in form.name.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form.price_per_hour.label(class="form-label fw-semibold") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    {{ form.price_per_hour(class="form-control is-invalid" if form.price_per_hour.errors else "form-control", placeholder="0,00", type="number", step="0.01") }}
+                                    <span class="input-group-text">/ hora</span>
+                                    {% for error in form.price_per_hour.errors %}
+                                        <div class="invalid-feedback d-block">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="form-text">Defina um preço justo por hora de trabalho estimado.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form.description.label(class="form-label fw-semibold") }}
+                                {{ form.description(class="form-control is-invalid" if form.description.errors else "form-control", rows="5", placeholder="Descreva suas habilidades, ferramentas que utiliza, sua experiência e região que atende...") }}
+                                {% for error in form.description.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
 
                     <div class="mb-4">
                         {{ form.photo.label(class="form-label fw-semibold") }}
@@ -67,11 +85,13 @@
                         </div>
                     </div>
 
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                        <a href="/" class="btn btn-light btn-lg px-4 me-md-2">Cancelar</a>
-                        {{ form.submit(class="btn btn-dark btn-lg px-5") }}
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                <a href="/" class="btn btn-light btn-lg px-4 me-md-2">Cancelar</a>
+                                {{ form.submit(class="btn btn-dark btn-lg px-5") }}
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
