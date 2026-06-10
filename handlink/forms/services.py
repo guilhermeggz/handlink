@@ -52,7 +52,7 @@ class AnunciarServicoForm(FlaskForm):
         ],
         places=2,
     )
-    photos = MultipleFileField(
+    photo = MultipleFileField(
         "Fotos do seu serviço (opcional)",
         validators=[
             FileAllowed(["jpg", "jpeg", "png"], "Apenas imagens nos formatos JPG ou PNG são permitidas!"),
