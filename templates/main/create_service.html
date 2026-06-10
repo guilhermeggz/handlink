@@ -3,6 +3,9 @@
 {% block title %}Anunciar Serviço | HandLink{% endblock %}
 
 {% block content %}
+<script src="/static/js/services.js"></script>
+
+
 <div class="row justify-content-center my-5">
     <div class="col-lg-8">
         <div class="card shadow-sm border-0">
@@ -47,12 +50,21 @@
                     </div>
 
                     <div class="mb-4">
-                        {{ form.photos.label(class="form-label fw-semibold") }}
-                        {{ form.photos(class="form-control is-invalid" if form.photos.errors else "form-control", multiple=True) }}
-                        <div class="form-text">Você pode selecionar várias fotos de uma vez (Formatos: JPG, PNG).</div>
-                        {% for error in form.photos.errors %}
+                        {{ form.photo.label(class="form-label fw-semibold") }}
+                        
+                        {{ form.photo(class="form-control is-invalid" if form.photo.errors else "form-control", id="photoInput", accept="image/*") }}
+                        
+                        <div class="form-text">Escolha uma foto para ilustrar seu anúncio.</div>
+                        {% for error in form.photo.errors %}
                             <div class="invalid-feedback d-block">{{ error }}</div>
                         {% endfor %}
+                        
+                        <div id="preview-wrapper" class="mt-3 d-none fade">
+                            <p class="text-muted small mb-2 fw-semibold">Pré-visualização:</p>
+                            <div class="d-inline-block">
+                                <img id="single-image-preview" src="" alt="Pré-visualização" class="img-thumbnail rounded shadow-sm object-fit-cover" style="width: 150px; height: 150px;">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">

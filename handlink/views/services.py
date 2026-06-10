@@ -1,10 +1,13 @@
 from types import SimpleNamespace
 
-from flask import Blueprint, abort, flash, jsonify, redirect, render_template, request, url_for
+from flask import Blueprint, abort, current_app, flash, jsonify, redirect, render_template, request, url_for
 from flask_login import login_required, current_user
 
-from handlink.forms.services import AnunciarServicoForm
-from handlink.models import Category, Service
+from handlink.forms.services import AnunciarServicoForm, CadastrarPrestadorForm
+from handlink.ext.db import db
+from handlink.models import Category, Service, Role, RoleUser
+from handlink.models.role_user import ProviderStatus
+from handlink.models.user import User
 
 bp_services = Blueprint("services", __name__)
 
@@ -104,11 +107,83 @@ def buscar_servicos():
 def anunciar_servico():
     if not current_user.is_authenticated:
         flash('Faça login ou cadastre-se rapidinho para anunciar seu serviço.', 'info')
-        # Redireciona para o login e anexa a página atual no parâmetro 'next'
+
         return redirect(url_for('auth.login', next=request.path))
     
+    provider_status = current_user.provider_status()
+    current_app.logger.debug(f"Status do usuário {current_user.email} como provider: {provider_status}")
+    
+    if provider_status == None:
+        flash('Cadastre-se como prestador para anunciar seus serviços.', 'warning')
+        return redirect(url_for('services.seja_prestador'))
+    
+    elif provider_status == ProviderStatus.PENDENTE:
+        flash('Sua solicitação de prestador está pendente. Aguarde a aprovação para anunciar seus serviços.', 'info')
+        return redirect(url_for('main.index'))
+    
+    elif provider_status == ProviderStatus.REPROVADO:
+        flash('Sua solicitação de prestador foi reprovada. Entre em contato para mais informações.', 'danger')
+        return redirect(url_for('main.index'))
+
     form = AnunciarServicoForm()
 
     if form.validate_on_submit():
         pass
     return render_template('main/create_service.html', form=form)
+
+@bp_services.route('/seja_prestador', methods=['GET', 'POST'])
+def seja_prestador():
+    if not current_user.is_authenticated:
+        flash('Faça login ou cadastre-se rapidinho para se tornar um prestador.', 'info')
+        return redirect(url_for('auth.login', next=request.path))
+    
+    form = CadastrarPrestadorForm()
+    
+    categorias_do_banco = Category.query.filter_by(status=True).all()
+    form.categories.choices = [(c.id, c.name) for c in categorias_do_banco]
+
+    provider_status = current_user.provider_status()
+    current_app.logger.debug(f"Status do usuário {current_user.email} como provider: {provider_status}")
+
+    match provider_status:
+        case ProviderStatus.PENDENTE:
+            flash('Sua solicitação de prestador está pendente. Aguarde a aprovação.', 'info')
+            return redirect(url_for('main.index'))
+        
+        case ProviderStatus.APROVADO:
+            flash('Você já é um prestador aprovado! Comece a anunciar seus serviços.', 'success')
+            return redirect(url_for('services.anunciar_servico'))
+        
+        case ProviderStatus.REPROVADO:
+            flash('Sua solicitação de prestador foi reprovada. Entre em contato para mais informações.', 'danger')
+            return redirect(url_for('main.index'))
+            
+        case _:
+            pass
+
+    if form.validate_on_submit():
+        user = User.query.filter_by(cnpj=form.cnpj.data).first()
+        if user:
+            flash("Este CNPJ foi cadastrado.", "danger")
+            return redirect(url_for("services.seja_prestador"))
+        
+        current_user.cnpj = form.cnpj.data
+
+        categorias_selecionadas = Category.query.filter(Category.id.in_(form.categories.data)).all()
+
+        current_user.worked_categories = categorias_selecionadas
+
+        provider_role = Role.query.filter_by(name="provider").first()
+
+        nova_associacao = RoleUser(
+            user=current_user,
+            role=provider_role,
+            provider_status=ProviderStatus.PENDENTE
+        )
+        db.session.add(nova_associacao)
+        db.session.commit()
+
+        flash('Sua solicitação para ser prestador foi enviada com sucesso e está em análise!', 'success')
+        return redirect(url_for('main.index'))
+    
+    return render_template('main/seja_prestador.html', form=form)

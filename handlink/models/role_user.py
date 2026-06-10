@@ -1,12 +1,18 @@
+from enum import Enum as PyEnum
 from typing import Optional, TYPE_CHECKING
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import func, Integer, ForeignKey, String, DateTime
+from sqlalchemy import func, Integer, ForeignKey, DateTime, Enum
 from handlink.ext.db import db
 
 if TYPE_CHECKING:
     from .role import Role
     from .user import User
+
+class ProviderStatus(PyEnum):
+    PENDENTE = 'Pendente'
+    APROVADO = 'Aprovado'
+    REPROVADO = 'Reprovado'
 
 class RoleUser(db.Model):
     __tablename__ = 'roles_has_users'
@@ -17,7 +23,11 @@ class RoleUser(db.Model):
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False, index=True)
     
     # Pendente, Aprovado ou Reprovado
-    service_provider_status: Mapped[Optional[str]] = mapped_column(String(15), nullable=True, default=None)
+    provider_status: Mapped[Optional[ProviderStatus]] = mapped_column(
+            Enum(ProviderStatus, name="provider_status_enum"), 
+            nullable=True, 
+            default=None
+        )
     
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     finished_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))

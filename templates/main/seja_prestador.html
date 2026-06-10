@@ -1,0 +1,61 @@
+{% extends "main/base.html" %}
+
+{% block title %}Seja um Prestador | HandLink{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-5">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 p-md-5">
+                <div class="mb-4">
+                    <h2 class="h3 fw-bold text-primary mb-2">
+                        <i class="fa-solid fa-briefcase me-2"></i>Seja um Prestador de Serviços
+                    </h2>
+                    <p class="text-muted mb-0">Preencha os dados abaixo para ativar seu perfil profissional e escolher suas categorias.</p>
+                </div>
+
+                <form method="POST" action="" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <input type="hidden" name="next" value="{{ request.args.get('next') or '' }}">
+
+                    <div class="mb-4">
+                        {{ form.cnpj.label(class="form-label fw-semibold") }}
+                        {{ form.cnpj(class="form-control is-invalid" if form.cnpj.errors else "form-control", placeholder="00000000000100", id="cnpjInput") }}
+                        <div class="form-text">Insira um CNPJ ativo e regularizado.</div>
+                        {% for error in form.cnpj.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form.categories.label(class="form-label fw-semibold d-block mb-2") }}
+                        
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for subfield in form.categories %}
+                                <div class="position-relative">
+                                    {{ subfield(class="btn-check", id=subfield.id) }}
+                                    
+                                    <label class="btn btn-outline-primary px-4 py-2 rounded-pill fw-medium" for="{{ subfield.id }}">
+                                        {{ subfield.label.text }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="form-text mt-2">Você pode selecionar uma ou mais categorias em que possui experiência.</div>
+                        {% for error in form.categories.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5">
+                        <a href="/" class="btn btn-light btn-lg px-4 me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-dark btn-lg px-5">Enviar Cadastro</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

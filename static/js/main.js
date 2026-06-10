@@ -216,6 +216,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }, 150);
             
-        }, 2500);
+        }, 3500);
     });
 });

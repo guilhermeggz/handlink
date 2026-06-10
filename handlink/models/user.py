@@ -1,16 +1,25 @@
 from typing import List, Optional, TYPE_CHECKING
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import func, Integer, String, DateTime, Boolean
+from sqlalchemy import ForeignKey, func, Integer, String, DateTime, Boolean
 from handlink.ext.db import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+
+from handlink.models.role_user import ProviderStatus
 
 if TYPE_CHECKING:
     from .role_user import RoleUser
     from .location import Address
     from .service import Service
     from .appointment import Appointment
+    from .category import Category
+
+provider_categories = db.Table(
+    'provider_categories',
+    db.Column('user_id', Integer, ForeignKey('users.id', ondelete='CASCADE'), primary_key=True),
+    db.Column('category_id', Integer, ForeignKey('categories.id', ondelete='CASCADE'), primary_key=True)
+)
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -21,6 +30,9 @@ class User(UserMixin, db.Model):
     email: Mapped[str] = mapped_column(String(100), unique=True, index=True)
     phone: Mapped[Optional[str]] = mapped_column(String(15))
     cpf: Mapped[Optional[str]] = mapped_column(String(15), unique=True, index=True)
+
+    cnpj: Mapped[Optional[str]] = mapped_column(String(18), unique=True, index=True)
+
     photo: Mapped[Optional[str]] = mapped_column(String(100))
     password: Mapped[Optional[str]] = mapped_column(String)
 
@@ -65,6 +77,12 @@ class User(UserMixin, db.Model):
         cascade='all, delete-orphan'
     )
 
+    worked_categories: Mapped[List['Category']] = relationship(
+        'Category',
+        secondary=provider_categories,
+        backref='providers'
+    )
+
     @property
     def roles(self):
         return [assoc.role for assoc in self.role_associations if assoc.role]
@@ -77,3 +95,10 @@ class User(UserMixin, db.Model):
 
     def __repr__(self) -> str:
         return f"<User {self.email}>"
+
+    def provider_status(self) -> Optional[str]:
+        """Busca o status do usuário na associação de provider."""
+        for assoc in self.role_associations:
+            if assoc.role and assoc.role.name == 'provider':
+                return  assoc.provider_status
+        return None
