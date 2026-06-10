@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 
 from handlink.forms.services import AnunciarServicoForm, CadastrarPrestadorForm
 from handlink.ext.db import db
-from handlink.models import Category, Service, Role, RoleUser, City, Service
+from handlink.models import Category, City, Role, RoleUser, Service
 from handlink.models.role_user import ProviderStatus
 from handlink.models.user import User
 
@@ -246,6 +246,10 @@ def seja_prestador():
         current_user.worked_categories = categorias_selecionadas
 
         provider_role = Role.query.filter_by(name="provider").first()
+        if not provider_role:
+            provider_role = Role(name="provider", status=True)
+            db.session.add(provider_role)
+            db.session.flush()
 
         nova_associacao = RoleUser(
             user=current_user,
