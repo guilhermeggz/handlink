@@ -89,6 +89,37 @@ def listar_categorias():
     }), 200
 
 
+@bp_services.route('/api/servicos/em-alta', methods=['GET'])
+def servicos_em_alta():
+    limit = min(request.args.get('limit', 4, type=int), 24)
+    offset = max(request.args.get('offset', 0, type=int), 0)
+
+    query = (
+        Service.query
+        .filter(Service.is_active == True)
+        .order_by(Service.created_at.desc(), Service.name.asc())
+    )
+
+    total_servicos = query.count()
+    services = (
+        query
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
+
+    return jsonify({
+        "total_servicos": total_servicos,
+        "limit": limit,
+        "offset": offset,
+        "has_more": offset + len(services) < total_servicos,
+        "servicos": [
+            serialize_service(service)
+            for service in services
+        ],
+    }), 200
+
+
 @bp_services.route('/api/servicos/buscar', methods=['GET'])
 def buscar_servicos():
     termo_busca = request.args.get('q', '')
@@ -100,22 +131,26 @@ def buscar_servicos():
 
     servicos_encontrados = query.all()
 
-    lista_resultado = []
-    for servico in servicos_encontrados:
-        lista_resultado.append({
-            "id": servico.id,
-            "name": servico.name,
-            "preco": servico.price,
-            "descricao": servico.desc,
-            "prestador": servico.provider.name,
-            "categoria": servico.category.name,
-            "cidade": f"{servico.city.name} - {servico.city.state}",
-        })
-
     return jsonify({
-        "total_servicos": len(lista_resultado),
-        "servicos": lista_resultado,
+        "total_servicos": len(servicos_encontrados),
+        "servicos": [
+            serialize_service(servico)
+            for servico in servicos_encontrados
+        ],
     }), 200
+
+
+def serialize_service(service):
+    return {
+        "id": service.id,
+        "name": service.name,
+        "preco": service.price,
+        "descricao": service.desc,
+        "prestador": service.provider.name,
+        "categoria": service.category.name,
+        "categoria_id": service.category.id,
+        "cidade": f"{service.city.name} - {service.city.state}",
+    }
 
 
 @bp_services.route('/servicos/anunciar_servico', methods=['GET', 'POST'])
